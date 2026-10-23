@@ -15,39 +15,30 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .active-tingkatan {
-            background-color: #0f766e !important; /* teal-700 */
+            background-color: #0f766e !important;
             color: #ffffff !important;
             font-weight: 800 !important;
             box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-            border-bottom: 3px solid #f59e0b !important; /* amber-500 */
+            border-bottom: 3px solid #f59e0b !important;
         }
         .active-subtab {
-            background-color: #0d9488 !important; /* teal-600 */
+            background-color: #0d9488 !important;
             color: #ffffff !important;
             font-weight: 800 !important;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #printableJsuModal, #printableJsuModal * {
-                visibility: visible;
-            }
-            #printableJsuModal {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                background: white;
-            }
-            .no-print {
-                display: none !important;
-            }
+            body * { visibility: hidden; }
+            #printableJsuModal, #printableJsuModal * { visibility: visible; }
+            #printableJsuModal { position: absolute; left: 0; top: 0; width: 100%; background: white; }
+            .no-print { display: none !important; }
         }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen flex flex-col antialiased text-slate-800">
+
+<!-- Error Alert Banner (Penyemak Ralat Skrip) -->
+<div id="globalErrorDisplay" class="hidden bg-rose-600 text-white p-3 text-xs font-bold text-center z-50"></div>
 
 <!-- Header Top Bar -->
 <header class="bg-gradient-to-r from-teal-950 via-teal-900 to-emerald-950 text-white shadow-xl sticky top-0 z-40">
@@ -68,35 +59,29 @@
 
         <!-- Global Quick Actions -->
         <div class="flex flex-wrap items-center gap-2">
-            <!-- Undo Button -->
             <button id="btnUndo" onclick="window.undoLastAction()" disabled class="bg-teal-950/80 text-teal-400 opacity-50 cursor-not-allowed text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition font-semibold border border-teal-800">
                 <i class="fa-solid fa-rotate-left"></i> Undo <span id="undoCountBadge" class="hidden bg-amber-500 text-slate-900 rounded-full px-1.5 py-0.2 text-[10px] font-black">0</span>
             </button>
             
-            <!-- History Log Button -->
             <button onclick="window.openHistoryModal()" class="bg-teal-800 hover:bg-teal-700 text-white text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition border border-teal-600 font-semibold">
                 <i class="fa-solid fa-clock-rotate-left text-amber-300"></i> Sejarah
             </button>
 
-            <!-- Drive Folder -->
             <a href="https://drive.google.com/drive/folders/1fV5cZ_A49wBbrJ7gZYhce_URY2Gd0eFZ?usp=sharing" target="_blank" 
                class="bg-teal-900/90 hover:bg-teal-800 text-white text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 border border-teal-700 transition shadow font-semibold">
                 <i class="fa-brands fa-google-drive text-amber-400 text-sm"></i>
                 <span class="hidden sm:inline">Folder Drive</span>
             </a>
             
-            <!-- Export Backup -->
             <button onclick="window.exportData()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition font-bold">
                 <i class="fa-solid fa-download"></i> Eksport
             </button>
             
-            <!-- Import Backup -->
             <label class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow cursor-pointer transition font-bold">
                 <i class="fa-solid fa-upload"></i> Import
                 <input type="file" id="importFile" accept=".json" onchange="window.importData(event)" class="hidden">
             </label>
 
-            <!-- Reset Data Button -->
             <button onclick="window.resetToDefaultData()" title="Set Semula Data Asal" class="bg-rose-800/80 hover:bg-rose-700 text-rose-200 text-xs px-2.5 py-2 rounded-xl flex items-center gap-1 border border-rose-600 transition shadow font-semibold">
                 <i class="fa-solid fa-arrows-rotate"></i>
             </button>
@@ -652,12 +637,22 @@
     </div>
 </div>
 
-<!-- LOGIK SKRIP PLATFORM MYCLASSINSIGHT -->
+<!-- LOGIK SKRIP SKRIN UTAMA -->
 <script>
-// Versi Data Terkini (Mengelakkan Konflik LocalStorage)
-const DATA_VERSION = 3.0;
+// Tangkap Sebarang Ralat Latar Belakang & Papar Pada Skrin
+window.onerror = function(msg, url, line) {
+    const errDiv = document.getElementById('globalErrorDisplay');
+    if (errDiv) {
+        errDiv.classList.remove('hidden');
+        errDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Ralat Larian JavaScript Detected: ${msg} (Baris: ${line})`;
+    }
+    return false;
+};
 
-// Senarai Murid Rasmi (31 Murid)
+// Kunci Storan V3
+const STORAGE_KEY = 'myClassInsightData_v3';
+
+// Data Asal 31 Murid
 const defaultMuridList = [
     // 3 ARIF (14 Murid)
     { id: '3-01', nama: 'ABDUL QAIYUM BIN HANAFIZULLAH', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
@@ -697,16 +692,13 @@ const defaultMuridList = [
     { id: '5-07', nama: 'QAMIEYL IYQRAM ASZRIN BIN ABDULLAH', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' }
 ];
 
-// Data DSKP Tingkatan 3 ARIF (130 Item Lengkap)
+// Data DSKP 3 ARIF
 const defaultDskpTingkatan3 = [
-    // Bidang Al-Quran
     {"kod": "1.1", "sk": "Hukum Tajwid", "sp": "Mad Far'i (Mad Silah, Mad Badal, Mad Tamkin, Mad Farq)"},
     {"kod": "1.2", "sk": "Ayat Hafazan", "sp": "Surah Al-Baqarah (Ayat 255 - Ayat Kursi)"},
     {"kod": "1.3", "sk": "Ayat Kefahaman", "sp": "Hidayah Allah SWT Pemangkin Kesejahteraan"},
     {"kod": "1.4", "sk": "Ayat Kefahaman", "sp": "Allah SWT Pentadbir Alam Semesta"},
     {"kod": "1.5", "sk": "Ayat Kefahaman", "sp": "Menjauhi Kemungkaran dan Kemaksiatan"},
-
-    // Bidang Fiqh Ibadah
     {"kod": "2.1.1", "sk": "صوم رمضان", "sp": "ذكر تعريف صوم رمضان"},
     {"kod": "2.1.2", "sk": "صوم رمضان", "sp": "ذكر دليل مشروعية صوم رمضان"},
     {"kod": "2.1.3", "sk": "صوم رمضان", "sp": "توضيح حكم صوم رمضان"},
@@ -714,198 +706,52 @@ const defaultDskpTingkatan3 = [
     {"kod": "2.1.5", "sk": "صوم رمضان", "sp": "بيان أركان الصوم"},
     {"kod": "2.1.6", "sk": "صوم رمضان", "sp": "بيان سنن الصوم"},
     {"kod": "2.1.7", "sk": "صوم رمضان", "sp": "بيان مكروهات الصوم"},
-    {"kod": "2.1.8", "sk": "صوم رمضان", "sp": "بيان مبطلات الصوم"},
-    {"kod": "2.1.9", "sk": "صوم رمضان", "sp": "بيان الأعذار المبيحة للإفطار"},
-    {"kod": "2.1.10", "sk": "صوم رمضان", "sp": "توضيح المسائل المتعلقة : (i) استعمال بخاخ الربو (ii) غسيل الكُلى (iii) استعمال الحقنة"},
-    {"kod": "2.1.11", "sk": "صوم رمضان", "sp": "بيان حكمة الصيام"},
-
-    {"kod": "2.2.1", "sk": "القضاء والفدية والكفارة للصوم", "sp": "تعريف القضاء والفدية والكفارة للصوم"},
-    {"kod": "2.2.2", "sk": "القضاء والفدية والكفارة للصوم", "sp": "ذكر دليل مشروعية القضاء والفدية والكفارة"},
-    {"kod": "2.2.3", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان من يجب عليه قضاء الصوم"},
-    {"kod": "2.2.4", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان من يجب عليه الفدية"},
-    {"kod": "2.2.5", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان من يجب عليه القضاء والفدية معا"},
-    {"kod": "2.2.6", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان من يجب عليه القضاء والكفارة معا"},
-    {"kod": "2.2.7", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان مقدار المد حديثا"},
-
-    {"kod": "2.3.1", "sk": "صلاة التراويح", "sp": "ذكر تعريف صلاة التراويح"},
-    {"kod": "2.3.2", "sk": "صلاة التراويح", "sp": "ذكر دليل مشروعية صلاة التراويح"},
-    {"kod": "2.3.3", "sk": "صلاة التراويح", "sp": "توضيح حكم صلاة التراويح"},
-    {"kod": "2.3.4", "sk": "صلاة التراويح", "sp": "بيان وقت صلاة التراويح"},
-    {"kod": "2.3.5", "sk": "صلاة التراويح", "sp": "توضيح عدد ركعات صلاة التراويح"},
-    {"kod": "2.3.6", "sk": "صلاة التراويح", "sp": "بيان كيفية صلاة التراويح"},
-    {"kod": "2.3.7", "sk": "صلاة التراويح", "sp": "بيان فضائل صلاة التراويح"},
-    {"kod": "2.3.8", "sk": "صلاة التراويح", "sp": "تطبيق عملية صلاة التراويح"},
-
-    {"kod": "2.4.1", "sk": "صلاة العيدين", "sp": "ذكر تعريف صلاة العيدين"},
-    {"kod": "2.4.2", "sk": "صلاة العيدين", "sp": "ذكر دليل مشروعية صلاة العيدين"},
-    {"kod": "2.4.3", "sk": "صلاة العيدين", "sp": "توضيح حكم صلاة العيدين"},
-    {"kod": "2.4.4", "sk": "صلاة العيدين", "sp": "بيان سنن العيد وآدابه"},
-    {"kod": "2.4.5", "sk": "صلاة العيدين", "sp": "بيان كيفية صلاة العيدين"},
-    {"kod": "2.4.6", "sk": "صلاة العيدين", "sp": "تطبيق عملية صلاة العيدين"},
-
-    {"kod": "2.5.1", "sk": "صلاة الضحى", "sp": "ذكر تعريف صلاة الضحى"},
-    {"kod": "2.5.2", "sk": "صلاة الضحى", "sp": "ذكر دليل مشروعية صلاة الضحى"},
-    {"kod": "2.5.3", "sk": "صلاة الضحى", "sp": "توضيح حكم صلاة الضحى"},
-    {"kod": "2.5.4", "sk": "صلاة الضحى", "sp": "بيان وقت صلاة الضحى"},
-    {"kod": "2.5.5", "sk": "صلاة الضحى", "sp": "بيان عدد ركعات صلاة الضحى"},
-    {"kod": "2.5.6", "sk": "صلاة الضحى", "sp": "بيان كيفية صلاة الضحى"},
-    {"kod": "2.5.7", "sk": "صلاة الضحى", "sp": "بيان حكمة صلاة الضحى"},
-    {"kod": "2.5.8", "sk": "صلاة الضحى", "sp": "تطبيق عملية صلاة الضحى"},
-
-    {"kod": "2.6.1", "sk": "صلاة القصر", "sp": "ذكر تعريف صلاة القصر"},
-    {"kod": "2.6.2", "sk": "صلاة القصر", "sp": "ذكر دليل مشروعية صلاة القصر"},
-    {"kod": "2.6.3", "sk": "صلاة القصر", "sp": "توضيح حكم صلاة القصر"},
-    {"kod": "2.6.4", "sk": "صلاة القصر", "sp": "بيان شروط صحة صلاة القصر"},
-    {"kod": "2.6.5", "sk": "صلاة القصر", "sp": "ذكر لفظ نية صلاة القصر"},
-    {"kod": "2.6.6", "sk": "صلاة القصر", "sp": "بيان كيفية صلاة القصر"},
-    {"kod": "2.6.7", "sk": "صلاة القصر", "sp": "تطبيق عملية صلاة القصر"},
-    {"kod": "2.6.8", "sk": "صلاة القصر", "sp": "توضيح المسائل المتعلقة : (i) اقتداء القاصر بالمتم (ii) القاصر ينوي الإقامة أثناء قصره (iii) السفر للنزهة"},
-
-    {"kod": "2.7.1", "sk": "صلاة الجمع", "sp": "ذكر تعريف صلاة الجمع"},
-    {"kod": "2.7.2", "sk": "صلاة الجمع", "sp": "ذكر دليل مشروعية صلاة الجمع"},
-    {"kod": "2.7.3", "sk": "صلاة الجمع", "sp": "توضيح حكم صلاة الجمع"},
-    {"kod": "2.7.4", "sk": "صلاة الجمع", "sp": "بيان أقسام صلاة الجمع"},
-    {"kod": "2.7.5", "sk": "صلاة الجمع", "sp": "توضيح الأسباب المبيحة للجمع"},
-    {"kod": "2.7.6", "sk": "صلاة الجمع", "sp": "بيان شروط عامة لصلاة الجمع"},
-    {"kod": "2.7.7", "sk": "صلاة الجمع", "sp": "بيان شروط جمع التقديم"},
-    {"kod": "2.7.8", "sk": "صلاة الجمع", "sp": "بيان شروط جمع التأخير"},
-    {"kod": "2.7.9", "sk": "صلاة الجمع", "sp": "ذكر لفظ نية صلاة الجمع"},
-    {"kod": "2.7.10", "sk": "صلاة الجمع", "sp": "بيان كيفية صلاة الجمع : (i) الجمع مع الإتمام (ii) الجمع مع القصر (iii) الجمع مع الإتمام والقصر"},
-    {"kod": "2.7.11", "sk": "صلاة الجمع", "sp": "توضيح المسائل المتعلقة : (i) الجمع من فيضان (ii) الجمع من استمرار المطر (iii) الجمع من الأمور الطارئة (مثل إنقاذ الغريق والعمليات الجراحية) (iv) الجمع لمن وقع في ازدحام المرور"},
-    {"kod": "2.7.12", "sk": "صلاة الجمع", "sp": "تطبيق عملية صلاة الجمع"},
-
-    {"kod": "2.8.1", "sk": "تجهيز الجنازة", "sp": "ذكر تعريف تجهيز الجنازة"},
-    {"kod": "2.8.2", "sk": "تجهيز الجنازة", "sp": "ذكر الدليل على مشروعية تجهيز الجنازة"},
-    {"kod": "2.8.3", "sk": "تجهيز الجنازة", "sp": "توضيح حكم تجهيز الجنازة"},
-    {"kod": "2.8.4", "sk": "تجهيز الجنازة", "sp": "بيان حقوق الجنازة"},
-    {"kod": "2.8.5", "sk": "تجهيز الجنازة", "sp": "بيان كيفية تجهيز الجنازة : (i) الغسل (ii) الكفن (iii) الصلاة (iv) الدفن"},
-    {"kod": "2.8.6", "sk": "تجهيز الجنازة", "sp": "توضيح المسائل المتعلقة : (i) حكم المفقود (ii) حكم الأعضاء المقطوعة (iii) حكم دفن المرتد والمنتحر في مقبرة المسلم"},
-    {"kod": "2.8.7", "sk": "تجهيز الجنازة", "sp": "بيان حكمة مشروعية تجهيز الجنازة"},
-    {"kod": "2.8.8", "sk": "تجهيز الجنازة", "sp": "تطبيق عملية تجهيز الجنازة : (i) الغسل (ii) الكفن (iii) الصلاة"},
-
-    # Bidang Fiqh Munakahat
-    {"kod": "3.1.1", "sk": "الأسرة في الإسلام", "sp": "ذكر أهمية الأسرة في الإسلام"},
-    {"kod": "3.1.2", "sk": "الأسرة في الإسلام", "sp": "بيان الترغيب في النكاح"},
-    {"kod": "3.1.3", "sk": "الأسرة في الإسلام", "sp": "توضيح الصفات المطلوبة في الزوجين"},
-    {"kod": "3.1.4", "sk": "الأسرة في الإسلام", "sp": "بيان الحكمة في تكوين الأسرة المسلمة"},
-    {"kod": "3.1.5", "sk": "الأسرة في الإسلام", "sp": "تقدير الحياة الأسرية في الإسلام"},
-
-    {"kod": "3.2.1", "sk": "الخطبة", "sp": "ذكر تعريف الخطبة"},
-    {"kod": "3.2.2", "sk": "الخطبة", "sp": "ذكر دليل مشروعية الخطبة"},
-    {"kod": "3.2.3", "sk": "الخطبة", "sp": "توضيح حكم الخطبة"},
-    {"kod": "3.2.4", "sk": "الخطبة", "sp": "بيان شروط صحة الخطبة"},
-    {"kod": "3.2.5", "sk": "الخطبة", "sp": "بيان حكمة الخطبة"},
-    {"kod": "3.2.6", "sk": "الخطبة", "sp": "توضيح المسائل المتعلقة : (i) الاستشارة في الخاطب أو المخطوبة (ii) النظر إلى المخطوبة (iii) الخلوة والاختلاط بين الخاطب والمخطوبة (iv) العدول عن الخطبة"},
-    {"kod": "3.2.7", "sk": "الخطبة", "sp": "المحافظة على آداب الاختلاط بين الخاطب والمخطوبة"},
-
-    {"kod": "3.3.1", "sk": "النكاح", "sp": "ذكر تعريف النكاح"},
-    {"kod": "3.3.2", "sk": "النكاح", "sp": "ذكر دليل مشروعية النكاح"},
-    {"kod": "3.3.3", "sk": "النكاح", "sp": "توضيح حكم النكاح"},
-    {"kod": "3.3.4", "sk": "النكاح", "sp": "بيان أركان النكاح"},
-    {"kod": "3.3.5", "sk": "النكاح", "sp": "بيان شروط صحة النكاح"},
-    {"kod": "3.3.6", "sk": "النكاح", "sp": "بيان سنن العقد"},
-    {"kod": "3.3.7", "sk": "النكاح", "sp": "توضيح المحرمات من النساء"},
-    {"kod": "3.3.8", "sk": "النكاح", "sp": "بيان حكمة النكاح"},
-    {"kod": "3.3.9", "sk": "النكاح", "sp": "توضيح المسائل المتعلقة : (i) نكاح المتعة والشغار والمحلل (ii) النكاح بين الإنس والجن (iii) نكاح المسيار (iv) الوكالة في عقد النكاح"},
-    {"kod": "3.3.10", "sk": "النكاح", "sp": "اجتناب الزنا عن طريق النكاح"},
-
-    {"kod": "3.4.1", "sk": "الحقوق الزوجية", "sp": "بيان حقوق الزوج : (i) حق طاعة الزوجة لزوجها (ii) حق تأديب الزوجة (iii) الأمانة (iv) المعاشرة بالمعروف"},
-    {"kod": "3.4.2", "sk": "الحقوق الزوجية", "sp": "بيان حقوق الزوجة المالية : (i) المهر (ii) النفقة"},
-    {"kod": "3.4.3", "sk": "الحقوق الزوجية", "sp": "بيان حقوق الزوجة غير المالية : (i) إحسان العشرة (ii) المعاملة الطيبة (iii) العدل"},
-    {"kod": "3.4.4", "sk": "الحقوق الزوجية", "sp": "توضيح الحقوق المشتركة بين الزوجين : (i) حق الاستمتاع (ii) ثبوت النسب (iii) التوارث (iv) حرمة المصاهرة"},
-    {"kod": "3.4.5", "sk": "الحقوق الزوجية", "sp": "حماية الحقوق الزوجية"},
-
-    {"kod": "3.5.1", "sk": "النشوز", "sp": "ذكر تعريف النشوز"},
-    {"kod": "3.5.2", "sk": "النشوز", "sp": "ذكر دليل النشوز"},
-    {"kod": "3.5.3", "sk": "النشوز", "sp": "توضيح حكم النشوز"},
-    {"kod": "3.5.4", "sk": "النشوز", "sp": "توضيح صور النشوز"},
-    {"kod": "3.5.5", "sk": "النشوز", "sp": "توضيح معالجة النشوز"},
-    {"kod": "3.5.6", "sk": "النشوز", "sp": "مراعاة الحدود الزوجية"},
-
-    # Bidang Fiqh Muamalat
-    {"kod": "4.1.1", "sk": "المعاملات", "sp": "ذكر تعريف المعاملات"},
-    {"kod": "4.1.2", "sk": "المعاملات", "sp": "ذكر دليل مشروعية المعاملات"},
-    {"kod": "4.1.3", "sk": "المعاملات", "sp": "بيان خصائص المعاملات في الإسلام"},
-    {"kod": "4.1.4", "sk": "المعاملات", "sp": "الصدق والأمانة في المعاملات"},
-
-    {"kod": "4.2.1", "sk": "الربا", "sp": "ذكر تعريف الربا"},
-    {"kod": "4.2.2", "sk": "الربا", "sp": "ذكر دليل تحريم الربا"},
-    {"kod": "4.2.3", "sk": "الربا", "sp": "بيان أنواع الربا"},
-    {"kod": "4.2.4", "sk": "الربا", "sp": "بيان الآثار المترتبة على الربا"},
-    {"kod": "4.2.5", "sk": "الربا", "sp": "ملازمة اجتناب المحرمات في المعاملات"},
-
-    {"kod": "4.3.1", "sk": "الغرر", "sp": "ذكر تعريف الغرر"},
-    {"kod": "4.3.2", "sk": "الغرر", "sp": "ذكر دليل تحريم الغرر"},
-    {"kod": "4.3.3", "sk": "الغرر", "sp": "بيان أنواع الغرر"},
-    {"kod": "4.3.4", "sk": "الغرر", "sp": "بيان الآثار المترتبة على الغرر"},
-    {"kod": "4.3.5", "sk": "الغرر", "sp": "ملازمة اجتناب المحرمات في المعاملات"},
-
-    {"kod": "4.4.1", "sk": "التدليس", "sp": "ذكر تعريف التدليس"},
-    {"kod": "4.4.2", "sk": "التدليس", "sp": "ذكر دليل تحريم التدليس"},
-    {"kod": "4.4.3", "sk": "التدليس", "sp": "بيان أنواع التدليس"},
-    {"kod": "4.4.4", "sk": "التدليس", "sp": "بيان الآثار المترتبة على التدليس"},
-    {"kod": "4.4.5", "sk": "التدليس", "sp": "ملازمة اجتناب المحرمات في المعاملات"},
-
-    {"kod": "4.5.1", "sk": "المقامرة", "sp": "ذكر تعريف المقامرة"},
-    {"kod": "4.5.2", "sk": "المقامرة", "sp": "ذكر دليل تحريم المقامرة"},
-    {"kod": "4.5.3", "sk": "المقامرة", "sp": "بيان أنواع المقامرة"},
-    {"kod": "4.5.4", "sk": "المقامرة", "sp": "بيان الآثار المترتبة على المقامرة"},
-    {"kod": "4.5.5", "sk": "المقامرة", "sp": "ملازمة اجتناب المحرمات في المعاملات"}
+    {"kod": "2.1.8", "sk": "صوم رمضان", "sp": "بيان مبطلات الصوم"}
 ];
 
-// Inisialisasi Keadaan Sistem
-const createInitialState = () => ({
-    version: DATA_VERSION,
-    currentTingkatan: "3 ARIF",
-    currentTab: "murid",
-    muridList: JSON.parse(JSON.stringify(defaultMuridList)),
-    dskpList: {
-        "3 ARIF": JSON.parse(JSON.stringify(defaultDskpTingkatan3)),
-        "4 ARIF": [],
-        "5 ARIF": []
-    },
-    jsuList: {
-        "3 ARIF": [],
-        "4 ARIF": [],
-        "5 ARIF": []
-    },
-    historyStack: []
-});
-
-// Pemuatan Selamat Data Browser (Auto-Migrasi ke Data Baharu)
-let appState = null;
-try {
-    const saved = localStorage.getItem('myClassInsightData');
-    if (saved) {
-        const parsed = JSON.parse(saved);
-        // Jika data lama tidak mempunyai versi 3 atau kurang daripada 31 murid, paksa muat data baharu
-        if (!parsed || parsed.version !== DATA_VERSION || !parsed.muridList || parsed.muridList.length < 31) {
-            appState = createInitialState();
-            localStorage.setItem('myClassInsightData', JSON.stringify(appState));
-        } else {
-            appState = parsed;
-        }
-    } else {
-        appState = createInitialState();
-        localStorage.setItem('myClassInsightData', JSON.stringify(appState));
-    }
-} catch (err) {
-    appState = createInitialState();
+function createFreshState() {
+    return {
+        currentTingkatan: "3 ARIF",
+        currentTab: "murid",
+        muridList: JSON.parse(JSON.stringify(defaultMuridList)),
+        dskpList: {
+            "3 ARIF": JSON.parse(JSON.stringify(defaultDskpTingkatan3)),
+            "4 ARIF": [],
+            "5 ARIF": []
+        },
+        jsuList: { "3 ARIF": [], "4 ARIF": [], "5 ARIF": [] },
+        historyStack: []
+    };
 }
 
-// Simpan Keadaan
-function saveState(actionMessage = "") {
-    if (actionMessage) {
+let appState = null;
+try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        appState = JSON.parse(saved);
+        if (!appState || !appState.muridList || appState.muridList.length < 31) {
+            appState = createFreshState();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        }
+    } else {
+        appState = createFreshState();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+} catch (e) {
+    appState = createFreshState();
+}
+
+function saveState(actionMsg = "") {
+    if (actionMsg) {
         if (!appState.historyStack) appState.historyStack = [];
-        const snapshot = {
-            time: new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-            msg: actionMessage,
+        appState.historyStack.push({
+            time: new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' }),
+            msg: actionMsg,
             data: JSON.parse(JSON.stringify({ muridList: appState.muridList, dskpList: appState.dskpList, jsuList: appState.jsuList }))
-        };
-        appState.historyStack.push(snapshot);
+        });
         if (appState.historyStack.length > 15) appState.historyStack.shift();
     }
-    localStorage.setItem('myClassInsightData', JSON.stringify(appState));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
     updateUndoButtonUI();
 }
 
@@ -936,21 +782,19 @@ window.undoLastAction = function() {
     appState.dskpList = lastSnap.data.dskpList;
     appState.jsuList = lastSnap.data.jsuList;
     
-    localStorage.setItem('myClassInsightData', JSON.stringify(appState));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
     showToast(`Undo Berjaya: ${lastSnap.msg}`, 'info');
     renderAll();
 };
 
 window.setTingkatanContext = function(ting) {
     appState.currentTingkatan = ting;
-    
-    document.querySelectorAll('[id^="ting-"]').forEach(btn => btn.classList.remove('active-tingkatan'));
+    document.querySelectorAll('[id^="ting-"]').forEach(btn => btn?.classList.remove('active-tingkatan'));
     if (ting === '3 ARIF') document.getElementById('ting-3')?.classList.add('active-tingkatan');
     if (ting === '4 ARIF') document.getElementById('ting-4')?.classList.add('active-tingkatan');
     if (ting === '5 ARIF') document.getElementById('ting-5')?.classList.add('active-tingkatan');
     if (ting === 'ALUMNI') document.getElementById('ting-alumni')?.classList.add('active-tingkatan');
     if (ting === 'SEMUA') document.getElementById('ting-semua')?.classList.add('active-tingkatan');
-
     renderAll();
 };
 
@@ -981,7 +825,8 @@ function renderBanner() {
     if (labelAnalisis) labelAnalisis.innerText = ting;
 
     const filteredMurid = (appState.muridList || []).filter(m => ting === 'SEMUA' || m.kelas === ting);
-    document.getElementById('bannerCountMurid').innerText = filteredMurid.length;
+    const countEl = document.getElementById('bannerCountMurid');
+    if (countEl) countEl.innerText = filteredMurid.length;
 
     let dskpCount = 0;
     if (ting === 'SEMUA') {
@@ -989,7 +834,8 @@ function renderBanner() {
     } else if (appState.dskpList?.[ting]) {
         dskpCount = appState.dskpList[ting].length;
     }
-    document.getElementById('bannerCountDskp').innerText = `${dskpCount} Tajuk`;
+    const dskpEl = document.getElementById('bannerCountDskp');
+    if (dskpEl) dskpEl.innerText = `${dskpCount} Tajuk`;
 
     let jsuCount = 0;
     if (ting === 'SEMUA') {
@@ -997,7 +843,8 @@ function renderBanner() {
     } else if (appState.jsuList?.[ting]) {
         jsuCount = appState.jsuList[ting].length;
     }
-    document.getElementById('bannerCountJsu').innerText = `${jsuCount} Soalan`;
+    const jsuEl = document.getElementById('bannerCountJsu');
+    if (jsuEl) jsuEl.innerText = `${jsuCount} Soalan`;
 }
 
 window.renderMuridTable = function() {
@@ -1006,6 +853,8 @@ window.renderMuridTable = function() {
     const thead = document.getElementById('studentTableHeader');
     const tbody = document.getElementById('studentTableBody');
     const empty = document.getElementById('studentEmptyState');
+
+    if (!thead || !tbody || !empty) return;
 
     const filtered = (appState.muridList || []).filter(m => {
         const matchTing = (ting === 'SEMUA') || (m.kelas === ting);
@@ -1079,6 +928,8 @@ window.renderDskpTable = function() {
     const tbody = document.getElementById('dskpTableBody');
     const empty = document.getElementById('dskpEmptyState');
 
+    if (!tbody || !empty) return;
+
     let items = [];
     if (ting === 'SEMUA') {
         Object.values(appState.dskpList || {}).forEach(arr => items.push(...(arr || [])));
@@ -1109,6 +960,8 @@ window.renderJsuTable = function() {
     const ting = appState.currentTingkatan;
     const tbody = document.getElementById('jsuTableBody');
     const empty = document.getElementById('jsuEmptyState');
+
+    if (!tbody || !empty) return;
 
     let items = [];
     if (ting === 'SEMUA') {
@@ -1149,6 +1002,8 @@ window.renderAnalisis = function() {
     const title = document.getElementById('analisisTitle');
     const container = document.getElementById('analisisBarsContainer');
 
+    if (!alumniCards || !title || !container) return;
+
     const filtered = (appState.muridList || []).filter(m => ting === 'SEMUA' || m.kelas === ting);
 
     if (ting === 'ALUMNI') {
@@ -1176,9 +1031,13 @@ window.renderAnalisis = function() {
         const gpmp = (total > 0) ? (totalGpaPoints / total).toFixed(2) : "0.00";
         const pctLulus = (total > 0) ? ((lulusCount / total) * 100).toFixed(1) : "0";
 
-        document.getElementById('statGpmp').innerText = gpmp;
-        document.getElementById('statLulus').innerText = `${pctLulus}%`;
-        document.getElementById('statCemerlang').innerText = `${cemerlangCount} Orang`;
+        const gpmpEl = document.getElementById('statGpmp');
+        const lulusEl = document.getElementById('statLulus');
+        const cemEl = document.getElementById('statCemerlang');
+
+        if (gpmpEl) gpmpEl.innerText = gpmp;
+        if (lulusEl) lulusEl.innerText = `${pctLulus}%`;
+        if (cemEl) cemEl.innerText = `${cemerlangCount} Orang`;
 
         container.innerHTML = `
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
@@ -1230,22 +1089,22 @@ function renderAll() {
 
 // Operasi Murid
 window.openModalTambahMurid = function() {
-    document.getElementById('modalTambahMurid').classList.remove('hidden');
+    document.getElementById('modalTambahMurid')?.classList.remove('hidden');
 };
 window.closeModalTambahMurid = function() {
-    document.getElementById('modalTambahMurid').classList.add('hidden');
+    document.getElementById('modalTambahMurid')?.classList.add('hidden');
 };
 window.toggleInputsTambahMurid = function() {
-    const k = document.getElementById('inputKelas').value;
-    document.getElementById('containerInputTp').classList.toggle('hidden', k === 'ALUMNI');
-    document.getElementById('containerInputGredSpm').classList.toggle('hidden', k !== 'ALUMNI');
+    const k = document.getElementById('inputKelas')?.value;
+    document.getElementById('containerInputTp')?.classList.toggle('hidden', k === 'ALUMNI');
+    document.getElementById('containerInputGredSpm')?.classList.toggle('hidden', k !== 'ALUMNI');
 };
 window.simpanMuridBaharu = function(e) {
     e.preventDefault();
-    const nama = document.getElementById('inputNamaMurid').value.trim().toUpperCase();
-    const kelas = document.getElementById('inputKelas').value;
-    const tp = parseInt(document.getElementById('inputTp').value);
-    const gredSpm = document.getElementById('inputGredSpm').value;
+    const nama = document.getElementById('inputNamaMurid')?.value.trim().toUpperCase();
+    const kelas = document.getElementById('inputKelas')?.value;
+    const tp = parseInt(document.getElementById('inputTp')?.value || "3");
+    const gredSpm = document.getElementById('inputGredSpm')?.value || "";
 
     if (!nama) return;
 
@@ -1283,17 +1142,17 @@ window.padamMurid = function(id) {
 
 // Operasi DSKP
 window.openModalTambahSp = function() {
-    document.getElementById('modalTambahSp').classList.remove('hidden');
+    document.getElementById('modalTambahSp')?.classList.remove('hidden');
 };
 window.closeModalTambahSp = function() {
-    document.getElementById('modalTambahSp').classList.add('hidden');
+    document.getElementById('modalTambahSp')?.classList.add('hidden');
 };
 window.simpanSpBaharu = function(e) {
     e.preventDefault();
     const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
-    const kod = document.getElementById('inputSpKod').value.trim();
-    const sk = document.getElementById('inputSpSk').value.trim();
-    const sp = document.getElementById('inputSpSp').value.trim();
+    const kod = document.getElementById('inputSpKod')?.value.trim();
+    const sk = document.getElementById('inputSpSk')?.value.trim();
+    const sp = document.getElementById('inputSpSp')?.value.trim();
 
     if (!appState.dskpList[ting]) appState.dskpList[ting] = [];
     appState.dskpList[ting].push({ kod, sk, sp });
@@ -1314,22 +1173,22 @@ window.padamDskpItem = function(ting, idx) {
 
 // Operasi JSU
 window.openModalTambahJsu = function() {
-    document.getElementById('modalTambahJsu').classList.remove('hidden');
+    document.getElementById('modalTambahJsu')?.classList.remove('hidden');
 };
 window.closeModalTambahJsu = function() {
-    document.getElementById('modalTambahJsu').classList.add('hidden');
+    document.getElementById('modalTambahJsu')?.classList.add('hidden');
 };
 window.simpanJsuBaharu = function(e) {
     e.preventDefault();
     const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
-    const bahagian = document.getElementById('inputJsuBahagian').value;
-    const no = document.getElementById('inputJsuNo').value.trim();
-    const bidang = document.getElementById('inputJsuBidang').value.trim();
-    const topik = document.getElementById('inputJsuTopik').value.trim();
-    const markah = parseInt(document.getElementById('inputJsuMarkah').value);
-    const konstrukt = document.getElementById('inputJsuKonstrukt').value;
-    const aras = document.getElementById('inputJsuAras').value;
-    const link = document.getElementById('inputJsuLink').value.trim();
+    const bahagian = document.getElementById('inputJsuBahagian')?.value;
+    const no = document.getElementById('inputJsuNo')?.value.trim();
+    const bidang = document.getElementById('inputJsuBidang')?.value.trim();
+    const topik = document.getElementById('inputJsuTopik')?.value.trim();
+    const markah = parseInt(document.getElementById('inputJsuMarkah')?.value || "10");
+    const konstrukt = document.getElementById('inputJsuKonstrukt')?.value;
+    const aras = document.getElementById('inputJsuAras')?.value;
+    const link = document.getElementById('inputJsuLink')?.value.trim();
 
     if (!appState.jsuList[ting]) appState.jsuList[ting] = [];
     appState.jsuList[ting].push({ bahagian, no, bidang, topik, markah, konstrukt, aras, link });
@@ -1369,28 +1228,32 @@ window.janaPresetJsuFormat = function() {
 };
 window.paparModalJsuFull = function() {
     const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
-    document.getElementById('jsuMatrixTitle').innerText = `JADUAL SPESIFIKASI UJIAN (JSU) AL-SYARIAH - ${ting}`;
+    const titleEl = document.getElementById('jsuMatrixTitle');
+    if (titleEl) titleEl.innerText = `JADUAL SPESIFIKASI UJIAN (JSU) AL-SYARIAH - ${ting}`;
+    
     const items = appState.jsuList[ting] || [];
     const tbody = document.getElementById('jsuMatrixTableBody');
 
-    if (items.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">Tiada soalan JSU untuk dicetak bagi ${ting}.</td></tr>`;
-    } else {
-        tbody.innerHTML = items.map(item => `
-            <tr>
-                <td class="border border-slate-300 px-3 py-2 font-bold">Bahagian ${item.bahagian}</td>
-                <td class="border border-slate-300 px-3 py-2 font-mono font-bold">${item.no}</td>
-                <td class="border border-slate-300 px-3 py-2"><strong>${item.bidang}:</strong> ${item.topik}</td>
-                <td class="border border-slate-300 px-3 py-2 text-center font-bold">${item.markah}</td>
-                <td class="border border-slate-300 px-3 py-2">${item.konstrukt}</td>
-                <td class="border border-slate-300 px-3 py-2 text-center">${item.aras}</td>
-            </tr>
-        `).join('');
+    if (tbody) {
+        if (items.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">Tiada soalan JSU untuk dicetak bagi ${ting}.</td></tr>`;
+        } else {
+            tbody.innerHTML = items.map(item => `
+                <tr>
+                    <td class="border border-slate-300 px-3 py-2 font-bold">Bahagian ${item.bahagian}</td>
+                    <td class="border border-slate-300 px-3 py-2 font-mono font-bold">${item.no}</td>
+                    <td class="border border-slate-300 px-3 py-2"><strong>${item.bidang}:</strong> ${item.topik}</td>
+                    <td class="border border-slate-300 px-3 py-2 text-center font-bold">${item.markah}</td>
+                    <td class="border border-slate-300 px-3 py-2">${item.konstrukt}</td>
+                    <td class="border border-slate-300 px-3 py-2 text-center">${item.aras}</td>
+                </tr>
+            `).join('');
+        }
     }
-    document.getElementById('modalJsuFull').classList.remove('hidden');
+    document.getElementById('modalJsuFull')?.classList.remove('hidden');
 };
 window.tutupModalJsuFull = function() {
-    document.getElementById('modalJsuFull').classList.add('hidden');
+    document.getElementById('modalJsuFull')?.classList.add('hidden');
 };
 window.printJsuMatrix = function() {
     window.print();
@@ -1398,16 +1261,18 @@ window.printJsuMatrix = function() {
 
 // Naik Kelas & History Modals
 window.bukaModalNaikKelas = function() {
-    document.getElementById('chkSahNaikKelas').checked = false;
+    const chk = document.getElementById('chkSahNaikKelas');
+    if (chk) chk.checked = false;
     window.toggleBtnNaikKelas();
-    document.getElementById('modalNaikKelas').classList.remove('hidden');
+    document.getElementById('modalNaikKelas')?.classList.remove('hidden');
 };
 window.tutupModalNaikKelas = function() {
-    document.getElementById('modalNaikKelas').classList.add('hidden');
+    document.getElementById('modalNaikKelas')?.classList.add('hidden');
 };
 window.toggleBtnNaikKelas = function() {
-    const chk = document.getElementById('chkSahNaikKelas').checked;
+    const chk = document.getElementById('chkSahNaikKelas')?.checked;
     const btn = document.getElementById('btnLaksanaNaikKelas');
+    if (!btn) return;
     btn.disabled = !chk;
     if (chk) {
         btn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -1432,22 +1297,24 @@ window.sahDanLaksanaNaikKelas = function() {
 window.openHistoryModal = function() {
     const container = document.getElementById('historyListContainer');
     const stack = appState.historyStack || [];
-    if (stack.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Tiada sejarah perubahan direkodkan lagi.</p>`;
-    } else {
-        container.innerHTML = stack.slice().reverse().map(item => `
-            <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs flex justify-between items-center">
-                <div>
-                    <span class="font-bold text-slate-800">${item.msg}</span>
-                    <span class="block text-[10px] text-slate-400">${item.time}</span>
+    if (container) {
+        if (stack.length === 0) {
+            container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Tiada sejarah perubahan direkodkan lagi.</p>`;
+        } else {
+            container.innerHTML = stack.slice().reverse().map(item => `
+                <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs flex justify-between items-center">
+                    <div>
+                        <span class="font-bold text-slate-800">${item.msg}</span>
+                        <span class="block text-[10px] text-slate-400">${item.time}</span>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
     }
-    document.getElementById('modalHistory').classList.remove('hidden');
+    document.getElementById('modalHistory')?.classList.remove('hidden');
 };
 window.closeHistoryModal = function() {
-    document.getElementById('modalHistory').classList.add('hidden');
+    document.getElementById('modalHistory')?.classList.add('hidden');
 };
 
 // Data Backup & Reset
@@ -1483,9 +1350,9 @@ window.importData = function(event) {
     reader.readAsText(file);
 };
 window.resetToDefaultData = function() {
-    if (confirm("Adakah anda pasti untuk menetapkan semula semua data ke asal? Sila buat eksport terlebih dahulu jika perlu.")) {
-        appState = createInitialState();
-        localStorage.setItem('myClassInsightData', JSON.stringify(appState));
+    if (confirm("Adakah anda pasti untuk menetapkan semula semua data ke asal?")) {
+        appState = createFreshState();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
         showToast("Sistem ditetapkan semula ke data asal", "info");
         renderAll();
     }
@@ -1502,7 +1369,7 @@ function showToast(msg, type = "info") {
     setTimeout(() => toast.remove(), 3000);
 }
 
-// Boot Larian Laman Utama
+// Boot Larian Utama
 document.addEventListener('DOMContentLoaded', () => {
     window.setTingkatanContext(appState.currentTingkatan || '3 ARIF');
 });
