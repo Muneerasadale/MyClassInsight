@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    <!-- TINGKATAN SELECTOR BAR (HAB UTAMA TINGKATAN & ALUMNI) -->
+    <!-- TINGKATAN SELECTOR BAR -->
     <div class="bg-teal-950 border-t border-teal-800/60 shadow-inner">
         <div class="max-w-7xl mx-auto px-4 flex items-center justify-between overflow-x-auto gap-2 py-1.5">
             <span class="text-[11px] font-extrabold uppercase text-teal-400 tracking-wider flex items-center gap-1.5 px-2 whitespace-nowrap">
@@ -130,7 +130,7 @@
         </div>
     </div>
 
-    <!-- MODULE SUB-TABS (MURID, DSKP, JSU, ANALISIS) -->
+    <!-- MODULE SUB-TABS -->
     <div class="bg-teal-900/60 border-t border-teal-800/40">
         <div class="max-w-7xl mx-auto px-4 flex gap-2 py-2 overflow-x-auto">
             <button id="tab-murid" onclick="window.switchTab('murid')" class="active-subtab text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
@@ -187,39 +187,30 @@
 
     <!-- TAB 1: SENARAI MURID / ALUMNI -->
     <section id="content-murid" class="space-y-6">
-        <!-- Controls & Add Student -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <!-- Search Input -->
                 <div class="relative flex-1 md:w-72">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
                     <input type="text" id="searchMurid" oninput="window.renderMuridTable()" placeholder="Cari nama murid..." class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl pl-8 pr-3 py-2.5 focus:ring-2 focus:ring-teal-500 outline-none">
                 </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="flex items-center gap-2 w-full md:w-auto justify-end">
                 <button onclick="window.openModalTambahMurid()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs px-4 py-2.5 rounded-xl font-bold flex items-center gap-1.5 shadow transition cursor-pointer">
                     <i class="fa-solid fa-user-plus"></i> Tambah Murid / Alumni
                 </button>
 
-                <!-- Safety Locked Naik Kelas Button -->
                 <button onclick="window.bukaModalNaikKelas()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow transition cursor-pointer">
                     <i class="fa-solid fa-lock text-amber-200"></i> Proses Naik Kelas Sesi Baharu
                 </button>
             </div>
         </div>
 
-        <!-- Student Data Table -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs border-collapse" id="studentTable">
-                    <thead id="studentTableHeader">
-                        <!-- Dynamic Table Header -->
-                    </thead>
-                    <tbody id="studentTableBody" class="divide-y divide-slate-100">
-                        <!-- Dynamic Content -->
-                    </tbody>
+                    <thead id="studentTableHeader"></thead>
+                    <tbody id="studentTableBody" class="divide-y divide-slate-100"></tbody>
                 </table>
             </div>
             <div id="studentEmptyState" class="hidden p-8 text-center text-slate-400">
@@ -229,7 +220,7 @@
         </div>
     </section>
 
-    <!-- TAB 2: DSKP AL-SYARIAH KBD (KHUSUS TINGKATAN) -->
+    <!-- TAB 2: DSKP AL-SYARIAH KBD -->
     <section id="content-dskp" class="space-y-6 hidden">
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -253,9 +244,7 @@
                             <th class="px-4 py-3.5 w-28 text-center">Tindakan</th>
                         </tr>
                     </thead>
-                    <tbody id="dskpTableBody" class="divide-y divide-slate-100">
-                        <!-- Dynamic Content -->
-                    </tbody>
+                    <tbody id="dskpTableBody" class="divide-y divide-slate-100"></tbody>
                 </table>
             </div>
             <div id="dskpEmptyState" class="hidden p-8 text-center text-slate-400">
@@ -265,9 +254,8 @@
         </div>
     </section>
 
-    <!-- TAB 3: JSU & INSTRUMEN SOALAN KBD (FORMAT STANDARD UASA / SPM) -->
+    <!-- TAB 3: JSU & INSTRUMEN SOALAN -->
     <section id="content-jsu" class="space-y-6 hidden">
-        <!-- JSU Header Controls & KBD Preset Generator -->
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
                 <div class="flex items-center gap-2">
@@ -292,7 +280,6 @@
             </div>
         </div>
 
-        <!-- Structure Summary Bar -->
         <div id="jsuStructureSummary" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-sky-50 border border-sky-200 p-4 rounded-2xl flex justify-between items-center">
                 <div>
@@ -322,7 +309,6 @@
             </div>
         </div>
 
-        <!-- Detailed JSU Questions Table -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs border-collapse">
@@ -339,9 +325,7 @@
                             <th class="px-4 py-3.5 w-20 text-center">Tindakan</th>
                         </tr>
                     </thead>
-                    <tbody id="jsuTableBody" class="divide-y divide-slate-100">
-                        <!-- Dynamic Content -->
-                    </tbody>
+                    <tbody id="jsuTableBody" class="divide-y divide-slate-100"></tbody>
                 </table>
             </div>
             <div id="jsuEmptyState" class="hidden p-8 text-center text-slate-400">
@@ -364,7 +348,6 @@
                 <span id="labelAnalisisTingkatan" class="bg-emerald-100 text-emerald-800 font-black text-xs px-3 py-1 rounded-lg">Tingkatan 3 ARIF</span>
             </div>
 
-            <!-- Highlight Cards for Alumni SPM Analysis -->
             <div id="alumniStatsCards" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
                     <span class="text-xs font-bold text-amber-800 uppercase block">Gred Purata Mata Pelajaran (GPMP)</span>
@@ -383,9 +366,7 @@
                 </div>
             </div>
 
-            <div id="analisisBarsContainer" class="space-y-4">
-                <!-- Dynamic Progress Bars -->
-            </div>
+            <div id="analisisBarsContainer" class="space-y-4"></div>
         </div>
     </section>
 
@@ -398,7 +379,6 @@
     </div>
 </footer>
 
-<!-- Toast Notification Container -->
 <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
 
 <!-- MODAL 1: SAFETY LOCKED NAIK KELAS -->
@@ -416,15 +396,11 @@
 
         <div class="py-4 space-y-3 text-xs text-slate-600">
             <p class="font-medium text-slate-800">Tindakan ini akan memindahkan kelas semua murid secara automatik seperti berikut:</p>
-            
             <ul class="space-y-2 bg-amber-50/80 p-3 rounded-xl border border-amber-200 text-amber-900 font-semibold">
                 <li class="flex items-center gap-2"><i class="fa-solid fa-arrow-right text-amber-600"></i> Murid <strong>3 ARIF</strong> ➔ Naik ke <strong>4 ARIF</strong></li>
                 <li class="flex items-center gap-2"><i class="fa-solid fa-arrow-right text-amber-600"></i> Murid <strong>4 ARIF</strong> ➔ Naik ke <strong>5 ARIF</strong></li>
                 <li class="flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-amber-600"></i> Murid <strong>5 ARIF</strong> ➔ Bertukar ke <strong>ALUMNI (SPM)</strong></li>
             </ul>
-
-            <p class="text-slate-500 italic">Murid yang dipindahkan ke Alumni boleh dikemaskini keputusan SPM Al-Syariah mereka apabila keputusan diumumkan.</p>
-
             <div class="pt-2">
                 <label class="flex items-start gap-2.5 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200 hover:bg-slate-100 transition">
                     <input type="checkbox" id="chkSahNaikKelas" onchange="window.toggleBtnNaikKelas()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
@@ -451,13 +427,7 @@
             </h3>
             <button onclick="window.closeHistoryModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        
-        <p class="text-xs text-slate-500 my-2">Senarai tindakan terkini yang dicatat. Anda boleh memulihkan (*Undo*) data ke mana-mana peringkat terdahulu.</p>
-
-        <div id="historyListContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 my-2">
-            <!-- Dynamic History Items -->
-        </div>
-
+        <div id="historyListContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 my-2"></div>
         <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
             <span class="text-slate-400 font-medium"><i class="fa-regular fa-keyboard"></i> Pintasan: <strong>Ctrl + Z</strong></span>
             <button onclick="window.closeHistoryModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-xl cursor-pointer">Tutup</button>
@@ -465,7 +435,7 @@
     </div>
 </div>
 
-<!-- MODAL 3: TAMBAH MURID / ALUMNI BAHARU -->
+<!-- MODAL 3: TAMBAH MURID -->
 <div id="modalTambahMurid" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex justify-between items-center pb-3 border-b border-slate-100">
@@ -546,17 +516,14 @@
                 <label class="block text-xs font-bold text-slate-700 mb-1">Kod SP:</label>
                 <input type="text" id="inputSpKod" required placeholder="Cth: 2.1.1" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none">
             </div>
-
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Standard Kandungan (SK):</label>
                 <input type="text" id="inputSpSk" required placeholder="Cth: صوم رمضان" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none">
             </div>
-
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Standard Pembelajaran (SP):</label>
                 <textarea id="inputSpSp" required rows="3" placeholder="Cth: ذكر تعريف صوم رمضان" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none"></textarea>
             </div>
-
             <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
                 <button type="button" onclick="window.closeModalTambahSp()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">Batal</button>
                 <button type="submit" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
@@ -645,7 +612,7 @@
     </div>
 </div>
 
-<!-- MODAL 6: CETAK / MATRIX JSU FULL PREVIEW -->
+<!-- MODAL 6: CETAK MATRIX JSU -->
 <div id="modalJsuFull" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div id="printableJsuModal" class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[90vh]">
         <div class="flex justify-between items-center pb-3 border-b border-slate-100 no-print">
@@ -672,9 +639,7 @@
                         <th class="border border-slate-300 px-3 py-2 w-20 text-center">Aras</th>
                     </tr>
                 </thead>
-                <tbody id="jsuMatrixTableBody">
-                    <!-- Dynamic Matrix Rows -->
-                </tbody>
+                <tbody id="jsuMatrixTableBody"></tbody>
             </table>
         </div>
 
@@ -687,9 +652,12 @@
     </div>
 </div>
 
-<!-- JAVASCRIPT LOGIC PLATFORM MYCLASSINSIGHT -->
+<!-- LOGIK SKRIP PLATFORM MYCLASSINSIGHT -->
 <script>
-// Senarai Murid Rasmi
+// Versi Data Terkini (Mengelakkan Konflik LocalStorage)
+const DATA_VERSION = 3.0;
+
+// Senarai Murid Rasmi (31 Murid)
 const defaultMuridList = [
     // 3 ARIF (14 Murid)
     { id: '3-01', nama: 'ABDUL QAIYUM BIN HANAFIZULLAH', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
@@ -729,7 +697,7 @@ const defaultMuridList = [
     { id: '5-07', nama: 'QAMIEYL IYQRAM ASZRIN BIN ABDULLAH', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' }
 ];
 
-// Data DSKP Tingkatan 3 ARIF (130 Item Sepenuhnya Disemak)
+// Data DSKP Tingkatan 3 ARIF (130 Item Lengkap)
 const defaultDskpTingkatan3 = [
     // Bidang Al-Quran
     {"kod": "1.1", "sk": "Hukum Tajwid", "sp": "Mad Far'i (Mad Silah, Mad Badal, Mad Tamkin, Mad Farq)"},
@@ -885,8 +853,9 @@ const defaultDskpTingkatan3 = [
     {"kod": "4.5.5", "sk": "المقامرة", "sp": "ملازمة اجتناب المحرمات في المعاملات"}
 ];
 
-// Structure Default State
-const defaultState = {
+// Inisialisasi Keadaan Sistem
+const createInitialState = () => ({
+    version: DATA_VERSION,
     currentTingkatan: "3 ARIF",
     currentTab: "murid",
     muridList: JSON.parse(JSON.stringify(defaultMuridList)),
@@ -901,11 +870,30 @@ const defaultState = {
         "5 ARIF": []
     },
     historyStack: []
-};
+});
 
-let appState = JSON.parse(localStorage.getItem('myClassInsightData')) || JSON.parse(JSON.stringify(defaultState));
+// Pemuatan Selamat Data Browser (Auto-Migrasi ke Data Baharu)
+let appState = null;
+try {
+    const saved = localStorage.getItem('myClassInsightData');
+    if (saved) {
+        const parsed = JSON.parse(saved);
+        // Jika data lama tidak mempunyai versi 3 atau kurang daripada 31 murid, paksa muat data baharu
+        if (!parsed || parsed.version !== DATA_VERSION || !parsed.muridList || parsed.muridList.length < 31) {
+            appState = createInitialState();
+            localStorage.setItem('myClassInsightData', JSON.stringify(appState));
+        } else {
+            appState = parsed;
+        }
+    } else {
+        appState = createInitialState();
+        localStorage.setItem('myClassInsightData', JSON.stringify(appState));
+    }
+} catch (err) {
+    appState = createInitialState();
+}
 
-// Save State with Undo
+// Simpan Keadaan
 function saveState(actionMessage = "") {
     if (actionMessage) {
         if (!appState.historyStack) appState.historyStack = [];
@@ -992,24 +980,21 @@ function renderBanner() {
     if (labelJsu) labelJsu.innerText = ting;
     if (labelAnalisis) labelAnalisis.innerText = ting;
 
-    // Filter murid
-    const filteredMurid = appState.muridList.filter(m => ting === 'SEMUA' || m.kelas === ting);
+    const filteredMurid = (appState.muridList || []).filter(m => ting === 'SEMUA' || m.kelas === ting);
     document.getElementById('bannerCountMurid').innerText = filteredMurid.length;
 
-    // Filter DSKP
     let dskpCount = 0;
     if (ting === 'SEMUA') {
-        Object.values(appState.dskpList).forEach(arr => dskpCount += arr.length);
-    } else if (appState.dskpList[ting]) {
+        Object.values(appState.dskpList || {}).forEach(arr => dskpCount += (arr || []).length);
+    } else if (appState.dskpList?.[ting]) {
         dskpCount = appState.dskpList[ting].length;
     }
     document.getElementById('bannerCountDskp').innerText = `${dskpCount} Tajuk`;
 
-    // Filter JSU
     let jsuCount = 0;
     if (ting === 'SEMUA') {
-        Object.values(appState.jsuList).forEach(arr => jsuCount += arr.length);
-    } else if (appState.jsuList[ting]) {
+        Object.values(appState.jsuList || {}).forEach(arr => jsuCount += (arr || []).length);
+    } else if (appState.jsuList?.[ting]) {
         jsuCount = appState.jsuList[ting].length;
     }
     document.getElementById('bannerCountJsu').innerText = `${jsuCount} Soalan`;
@@ -1022,9 +1007,9 @@ window.renderMuridTable = function() {
     const tbody = document.getElementById('studentTableBody');
     const empty = document.getElementById('studentEmptyState');
 
-    const filtered = appState.muridList.filter(m => {
+    const filtered = (appState.muridList || []).filter(m => {
         const matchTing = (ting === 'SEMUA') || (m.kelas === ting);
-        const matchQuery = m.nama.toLowerCase().includes(query);
+        const matchQuery = (m.nama || "").toLowerCase().includes(query);
         return matchTing && matchQuery;
     });
 
@@ -1096,8 +1081,8 @@ window.renderDskpTable = function() {
 
     let items = [];
     if (ting === 'SEMUA') {
-        Object.values(appState.dskpList).forEach(arr => items.push(...arr));
-    } else if (appState.dskpList[ting]) {
+        Object.values(appState.dskpList || {}).forEach(arr => items.push(...(arr || [])));
+    } else if (appState.dskpList?.[ting]) {
         items = appState.dskpList[ting];
     }
 
@@ -1127,8 +1112,8 @@ window.renderJsuTable = function() {
 
     let items = [];
     if (ting === 'SEMUA') {
-        Object.values(appState.jsuList).forEach(arr => items.push(...arr));
-    } else if (appState.jsuList[ting]) {
+        Object.values(appState.jsuList || {}).forEach(arr => items.push(...(arr || [])));
+    } else if (appState.jsuList?.[ting]) {
         items = appState.jsuList[ting];
     }
 
@@ -1164,7 +1149,7 @@ window.renderAnalisis = function() {
     const title = document.getElementById('analisisTitle');
     const container = document.getElementById('analisisBarsContainer');
 
-    const filtered = appState.muridList.filter(m => ting === 'SEMUA' || m.kelas === ting);
+    const filtered = (appState.muridList || []).filter(m => ting === 'SEMUA' || m.kelas === ting);
 
     if (ting === 'ALUMNI') {
         alumniCards.classList.remove('hidden');
@@ -1243,7 +1228,7 @@ function renderAll() {
     updateUndoButtonUI();
 }
 
-// Student Operations
+// Operasi Murid
 window.openModalTambahMurid = function() {
     document.getElementById('modalTambahMurid').classList.remove('hidden');
 };
@@ -1296,7 +1281,7 @@ window.padamMurid = function(id) {
     }
 };
 
-// DSKP Operations
+// Operasi DSKP
 window.openModalTambahSp = function() {
     document.getElementById('modalTambahSp').classList.remove('hidden');
 };
@@ -1327,7 +1312,7 @@ window.padamDskpItem = function(ting, idx) {
     }
 };
 
-// JSU Operations
+// Operasi JSU
 window.openModalTambahJsu = function() {
     document.getElementById('modalTambahJsu').classList.remove('hidden');
 };
@@ -1499,8 +1484,8 @@ window.importData = function(event) {
 };
 window.resetToDefaultData = function() {
     if (confirm("Adakah anda pasti untuk menetapkan semula semua data ke asal? Sila buat eksport terlebih dahulu jika perlu.")) {
-        appState = JSON.parse(JSON.stringify(defaultState));
-        localStorage.removeItem('myClassInsightData');
+        appState = createInitialState();
+        localStorage.setItem('myClassInsightData', JSON.stringify(appState));
         showToast("Sistem ditetapkan semula ke data asal", "info");
         renderAll();
     }
@@ -1508,6 +1493,7 @@ window.resetToDefaultData = function() {
 
 function showToast(msg, type = "info") {
     const container = document.getElementById('toastContainer');
+    if (!container) return;
     const toast = document.createElement('div');
     const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'info' ? 'bg-teal-700' : 'bg-rose-600';
     toast.className = `${bgClass} text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce`;
@@ -1516,7 +1502,7 @@ function showToast(msg, type = "info") {
     setTimeout(() => toast.remove(), 3000);
 }
 
-// Initial Boot
+// Boot Larian Laman Utama
 document.addEventListener('DOMContentLoaded', () => {
     window.setTingkatanContext(appState.currentTingkatan || '3 ARIF');
 });
