@@ -548,4 +548,978 @@
             </div>
 
             <div>
-                <label class="
+                <label class="block text-xs font-bold text-slate-700 mb-1">Standard Kandungan (SK):</label>
+                <input type="text" id="inputSpSk" required placeholder="Cth: صوم رمضان" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Standard Pembelajaran (SP):</label>
+                <textarea id="inputSpSp" required rows="3" placeholder="Cth: ذكر تعريف صوم رمضان" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none"></textarea>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                <button type="button" onclick="window.closeModalTambahSp()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">Batal</button>
+                <button type="submit" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-check"></i> Simpan SP
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL 5: TAMBAH INSTRUMEN JSU -->
+<div id="modalTambahJsu" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+        <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                <i class="fa-solid fa-file-circle-plus text-indigo-600"></i> Tambah Soalan JSU
+            </h3>
+            <button onclick="window.closeModalTambahJsu()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <form id="formTambahJsu" onsubmit="window.simpanJsuBaharu(event)" class="space-y-3 my-3">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Bahagian (قسم):</label>
+                    <select id="inputJsuBahagian" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <option value="A">Bahagian A (قسم أ)</option>
+                        <option value="B" selected>Bahagian B (قسم ب)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">No. Soalan:</label>
+                    <input type="text" id="inputJsuNo" required placeholder="Cth: Soalan 1(a)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Bidang / Subjek:</label>
+                    <input type="text" id="inputJsuBidang" required placeholder="Cth: Fiqh Ibadah" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Markah:</label>
+                    <input type="number" id="inputJsuMarkah" required min="1" max="100" value="10" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Topik / Tajuk JSU:</label>
+                <input type="text" id="inputJsuTopik" required placeholder="Cth: صوم رمضان" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Konstrukt:</label>
+                    <select id="inputJsuKonstrukt" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <option value="Mengingat">Mengingat</option>
+                        <option value="Memahami" selected>Memahami</option>
+                        <option value="Mengaplikasi">Mengaplikasi</option>
+                        <option value="Menganalisis">Menganalisis</option>
+                        <option value="Menilai">Menilai</option>
+                        <option value="Mencipta">Mencipta</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Aras Kesukaran:</label>
+                    <select id="inputJsuAras" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <option value="Rendah">Rendah (R)</option>
+                        <option value="Sederhana" selected>Sederhana (S)</option>
+                        <option value="Tinggi">Tinggi (T)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Pautan Fail Soalan / Drive (Pilihan):</label>
+                <input type="url" id="inputJsuLink" placeholder="https://drive.google.com/..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                <button type="button" onclick="window.closeModalTambahJsu()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">Batal</button>
+                <button type="submit" class="bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-check"></i> Simpan Soalan JSU
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL 6: CETAK / MATRIX JSU FULL PREVIEW -->
+<div id="modalJsuFull" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div id="printableJsuModal" class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[90vh]">
+        <div class="flex justify-between items-center pb-3 border-b border-slate-100 no-print">
+            <h3 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
+                <i class="fa-solid fa-print text-teal-600"></i> Cetak Jadual Spesifikasi Ujian (JSU)
+            </h3>
+            <button onclick="window.tutupModalJsuFull()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="my-4 overflow-y-auto flex-1">
+            <div class="text-center mb-6 border-b pb-4">
+                <h2 id="jsuMatrixTitle" class="text-lg font-black uppercase tracking-tight text-slate-900">JADUAL SPESIFIKASI UJIAN (JSU) AL-SYARIAH KBD</h2>
+                <p class="text-xs text-slate-500">Kementerian Pendidikan Malaysia - Kurikulum Bersepadu Dini (KBD)</p>
+            </div>
+
+            <table class="w-full text-left text-xs border border-slate-300 border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                        <th class="border border-slate-300 px-3 py-2 w-20">Bahagian</th>
+                        <th class="border border-slate-300 px-3 py-2 w-20">No. Soalan</th>
+                        <th class="border border-slate-300 px-3 py-2">Bidang & Topik JSU</th>
+                        <th class="border border-slate-300 px-3 py-2 w-16 text-center">Markah</th>
+                        <th class="border border-slate-300 px-3 py-2 w-24">Konstrukt</th>
+                        <th class="border border-slate-300 px-3 py-2 w-20 text-center">Aras</th>
+                    </tr>
+                </thead>
+                <tbody id="jsuMatrixTableBody">
+                    <!-- Dynamic Matrix Rows -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 no-print">
+            <button onclick="window.tutupModalJsuFull()" class="bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Tutup</button>
+            <button onclick="window.printJsuMatrix()" class="bg-teal-700 hover:bg-teal-800 text-white font-bold px-5 py-2 rounded-xl text-xs shadow flex items-center gap-1.5 cursor-pointer">
+                <i class="fa-solid fa-print"></i> Cetak Sekarang
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT LOGIC PLATFORM MYCLASSINSIGHT -->
+<script>
+// Senarai Murid Rasmi
+const defaultMuridList = [
+    // 3 ARIF (14 Murid)
+    { id: '3-01', nama: 'ABDUL QAIYUM BIN HANAFIZULLAH', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '3-02', nama: 'AKMA ZAIRIL DANISH BIN MOHAMAD ASLAM AMIR', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '3-03', nama: 'ARIFF AKMAL BIN ASHARI', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '3-04', nama: 'EZAIRY HAZIMIE BIN NOR HALMY', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '3-05', nama: 'MUHAMMAD ADAM FIRDHAUS BIN ROZALI', kelas: '3 ARIF', status: 'AKTIF', tp: 3, gredSpm: '' },
+    { id: '3-06', nama: 'MUHAMMAD QAYYUM AKIF BIN MOHAMMAD AZWAN ALIF', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '3-07', nama: 'NOR SYAMIL IRFAN BIN NORRUL HISHAM', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '3-08', nama: 'NUR AFIFAH BINTI AB RAHIM', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '3-09', nama: 'NUR DAMIA AWLIYA BINTI MOHAMAD ISMAIL', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '3-10', nama: 'NURQHALIF AN-NAS BIN MOHAMMAD KAMARUL ARRIFIN', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '3-11', nama: 'NURUL FATIHA BINTI MOHD FAROUK', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '3-12', nama: 'SHARIFAH ARISSA SOFIA BINTI SYED KHAIMAN AKTAR', kelas: '3 ARIF', status: 'AKTIF', tp: 6, gredSpm: '' },
+    { id: '3-13', nama: 'SITI NUR SOFEA NASUHA BINTI MOHD NAZRI', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '3-14', nama: 'SYAKIRAH AQILAH BINTI SYARIFUDIN', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+
+    // 4 ARIF (10 Murid)
+    { id: '4-01', nama: 'ADAM ZULKARNAIN BIN MOHD HAMDAN', kelas: '4 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '4-02', nama: 'DAMYIA AISYAH BINTI SHAHRUL NIZAM', kelas: '4 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '4-03', nama: 'MOHAMAD FIKRI BIN ABDULLAH', kelas: '4 ARIF', status: 'AKTIF', tp: 3, gredSpm: '' },
+    { id: '4-04', nama: 'MUHAMMAD AMIRUL IRFAN BIN ZAINAL ABIDIN', kelas: '4 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '4-05', nama: 'MUHAMMAD HANIF BIN ABDULLAH', kelas: '4 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '4-06', nama: 'MUHAMMAD SAZLEY AMRIE BIN MOHD ZAMRI', kelas: '4 ARIF', status: 'AKTIF', tp: 3, gredSpm: '' },
+    { id: '4-07', nama: 'NUR ENALYNA HUMAIRAH BINTI ZAINAL ABIDIN', kelas: '4 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '4-08', nama: 'NURUL SYAMIMI BINTI NORRUL HISHAM', kelas: '4 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '4-09', nama: 'PUTRI MARDIATUL NASUHA BINTI IRWAN', kelas: '4 ARIF', status: 'AKTIF', tp: 6, gredSpm: '' },
+    { id: '4-10', nama: 'RUHAIKHANUR DANIA ALYSHA BINTI M HASZRI', kelas: '4 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+
+    // 5 ARIF (7 Murid)
+    { id: '5-01', nama: 'AREEFA DALILA BINTI SHARUL AZLAN', kelas: '5 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '5-02', nama: 'FAIROZ SYAHMI BIN MOHD ZAIDI', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '5-03', nama: 'MUIZ ZAMAN BIN MOHAMAD ZAKI', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
+    { id: '5-04', nama: 'NOR QAMIELIEYA BINTI AMRAN', kelas: '5 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '5-05', nama: 'NUR AUNI SYAZWINA BINTI MOHD AZRIL', kelas: '5 ARIF', status: 'AKTIF', tp: 6, gredSpm: '' },
+    { id: '5-06', nama: 'NUR IZZATI UMAIRA BINTI ABDULLAH', kelas: '5 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
+    { id: '5-07', nama: 'QAMIEYL IYQRAM ASZRIN BIN ABDULLAH', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' }
+];
+
+// Data DSKP Tingkatan 3 ARIF (130 Item Sepenuhnya Disemak)
+const defaultDskpTingkatan3 = [
+    // Bidang Al-Quran
+    {"kod": "1.1", "sk": "Hukum Tajwid", "sp": "Mad Far'i (Mad Silah, Mad Badal, Mad Tamkin, Mad Farq)"},
+    {"kod": "1.2", "sk": "Ayat Hafazan", "sp": "Surah Al-Baqarah (Ayat 255 - Ayat Kursi)"},
+    {"kod": "1.3", "sk": "Ayat Kefahaman", "sp": "Hidayah Allah SWT Pemangkin Kesejahteraan"},
+    {"kod": "1.4", "sk": "Ayat Kefahaman", "sp": "Allah SWT Pentadbir Alam Semesta"},
+    {"kod": "1.5", "sk": "Ayat Kefahaman", "sp": "Menjauhi Kemungkaran dan Kemaksiatan"},
+
+    // Bidang Fiqh Ibadah
+    {"kod": "2.1.1", "sk": "صوم رمضان", "sp": "ذكر تعريف صوم رمضان"},
+    {"kod": "2.1.2", "sk": "صوم رمضان", "sp": "ذكر دليل مشروعية صوم رمضان"},
+    {"kod": "2.1.3", "sk": "صوم رمضان", "sp": "توضيح حكم صوم رمضان"},
+    {"kod": "2.1.4", "sk": "صوم رمضان", "sp": "بيان شروط صحة الصوم"},
+    {"kod": "2.1.5", "sk": "صوم رمضان", "sp": "بيان أركان الصوم"},
+    {"kod": "2.1.6", "sk": "صوم رمضان", "sp": "بيان سنن الصوم"},
+    {"kod": "2.1.7", "sk": "صوم رمضان", "sp": "بيان مكروهات الصوم"},
+    {"kod": "2.1.8", "sk": "صوم رمضان", "sp": "بيان مبطلات الصوم"},
+    {"kod": "2.1.9", "sk": "صوم رمضان", "sp": "بيان الأعذار المبيحة للإفطار"},
+    {"kod": "2.1.10", "sk": "صوم رمضان", "sp": "توضيح المسائل المتعلقة : (i) استعمال بخاخ الربو (ii) غسيل الكُلى (iii) استعمال الحقنة"},
+    {"kod": "2.1.11", "sk": "صوم رمضان", "sp": "بيان حكمة الصيام"},
+
+    {"kod": "2.2.1", "sk": "القضاء والفدية والكفارة للصوم", "sp": "تعريف القضاء والفدية والكفارة للصوم"},
+    {"kod": "2.2.2", "sk": "القضاء والفدية والكفارة للصوم", "sp": "ذكر دليل مشروعية القضاء والفدية والكفارة"},
+    {"kod": "2.2.3", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان من يجب عليه قضاء الصوم"},
+    {"kod": "2.2.4", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان من يجب عليه الفدية"},
+    {"kod": "2.2.5", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان من يجب عليه القضاء والفدية معا"},
+    {"kod": "2.2.6", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان من يجب عليه القضاء والكفارة معا"},
+    {"kod": "2.2.7", "sk": "القضاء والفدية والكفارة للصوم", "sp": "بيان مقدار المد حديثا"},
+
+    {"kod": "2.3.1", "sk": "صلاة التراويح", "sp": "ذكر تعريف صلاة التراويح"},
+    {"kod": "2.3.2", "sk": "صلاة التراويح", "sp": "ذكر دليل مشروعية صلاة التراويح"},
+    {"kod": "2.3.3", "sk": "صلاة التراويح", "sp": "توضيح حكم صلاة التراويح"},
+    {"kod": "2.3.4", "sk": "صلاة التراويح", "sp": "بيان وقت صلاة التراويح"},
+    {"kod": "2.3.5", "sk": "صلاة التراويح", "sp": "توضيح عدد ركعات صلاة التراويح"},
+    {"kod": "2.3.6", "sk": "صلاة التراويح", "sp": "بيان كيفية صلاة التراويح"},
+    {"kod": "2.3.7", "sk": "صلاة التراويح", "sp": "بيان فضائل صلاة التراويح"},
+    {"kod": "2.3.8", "sk": "صلاة التراويح", "sp": "تطبيق عملية صلاة التراويح"},
+
+    {"kod": "2.4.1", "sk": "صلاة العيدين", "sp": "ذكر تعريف صلاة العيدين"},
+    {"kod": "2.4.2", "sk": "صلاة العيدين", "sp": "ذكر دليل مشروعية صلاة العيدين"},
+    {"kod": "2.4.3", "sk": "صلاة العيدين", "sp": "توضيح حكم صلاة العيدين"},
+    {"kod": "2.4.4", "sk": "صلاة العيدين", "sp": "بيان سنن العيد وآدابه"},
+    {"kod": "2.4.5", "sk": "صلاة العيدين", "sp": "بيان كيفية صلاة العيدين"},
+    {"kod": "2.4.6", "sk": "صلاة العيدين", "sp": "تطبيق عملية صلاة العيدين"},
+
+    {"kod": "2.5.1", "sk": "صلاة الضحى", "sp": "ذكر تعريف صلاة الضحى"},
+    {"kod": "2.5.2", "sk": "صلاة الضحى", "sp": "ذكر دليل مشروعية صلاة الضحى"},
+    {"kod": "2.5.3", "sk": "صلاة الضحى", "sp": "توضيح حكم صلاة الضحى"},
+    {"kod": "2.5.4", "sk": "صلاة الضحى", "sp": "بيان وقت صلاة الضحى"},
+    {"kod": "2.5.5", "sk": "صلاة الضحى", "sp": "بيان عدد ركعات صلاة الضحى"},
+    {"kod": "2.5.6", "sk": "صلاة الضحى", "sp": "بيان كيفية صلاة الضحى"},
+    {"kod": "2.5.7", "sk": "صلاة الضحى", "sp": "بيان حكمة صلاة الضحى"},
+    {"kod": "2.5.8", "sk": "صلاة الضحى", "sp": "تطبيق عملية صلاة الضحى"},
+
+    {"kod": "2.6.1", "sk": "صلاة القصر", "sp": "ذكر تعريف صلاة القصر"},
+    {"kod": "2.6.2", "sk": "صلاة القصر", "sp": "ذكر دليل مشروعية صلاة القصر"},
+    {"kod": "2.6.3", "sk": "صلاة القصر", "sp": "توضيح حكم صلاة القصر"},
+    {"kod": "2.6.4", "sk": "صلاة القصر", "sp": "بيان شروط صحة صلاة القصر"},
+    {"kod": "2.6.5", "sk": "صلاة القصر", "sp": "ذكر لفظ نية صلاة القصر"},
+    {"kod": "2.6.6", "sk": "صلاة القصر", "sp": "بيان كيفية صلاة القصر"},
+    {"kod": "2.6.7", "sk": "صلاة القصر", "sp": "تطبيق عملية صلاة القصر"},
+    {"kod": "2.6.8", "sk": "صلاة القصر", "sp": "توضيح المسائل المتعلقة : (i) اقتداء القاصر بالمتم (ii) القاصر ينوي الإقامة أثناء قصره (iii) السفر للنزهة"},
+
+    {"kod": "2.7.1", "sk": "صلاة الجمع", "sp": "ذكر تعريف صلاة الجمع"},
+    {"kod": "2.7.2", "sk": "صلاة الجمع", "sp": "ذكر دليل مشروعية صلاة الجمع"},
+    {"kod": "2.7.3", "sk": "صلاة الجمع", "sp": "توضيح حكم صلاة الجمع"},
+    {"kod": "2.7.4", "sk": "صلاة الجمع", "sp": "بيان أقسام صلاة الجمع"},
+    {"kod": "2.7.5", "sk": "صلاة الجمع", "sp": "توضيح الأسباب المبيحة للجمع"},
+    {"kod": "2.7.6", "sk": "صلاة الجمع", "sp": "بيان شروط عامة لصلاة الجمع"},
+    {"kod": "2.7.7", "sk": "صلاة الجمع", "sp": "بيان شروط جمع التقديم"},
+    {"kod": "2.7.8", "sk": "صلاة الجمع", "sp": "بيان شروط جمع التأخير"},
+    {"kod": "2.7.9", "sk": "صلاة الجمع", "sp": "ذكر لفظ نية صلاة الجمع"},
+    {"kod": "2.7.10", "sk": "صلاة الجمع", "sp": "بيان كيفية صلاة الجمع : (i) الجمع مع الإتمام (ii) الجمع مع القصر (iii) الجمع مع الإتمام والقصر"},
+    {"kod": "2.7.11", "sk": "صلاة الجمع", "sp": "توضيح المسائل المتعلقة : (i) الجمع من فيضان (ii) الجمع من استمرار المطر (iii) الجمع من الأمور الطارئة (مثل إنقاذ الغريق والعمليات الجراحية) (iv) الجمع لمن وقع في ازدحام المرور"},
+    {"kod": "2.7.12", "sk": "صلاة الجمع", "sp": "تطبيق عملية صلاة الجمع"},
+
+    {"kod": "2.8.1", "sk": "تجهيز الجنازة", "sp": "ذكر تعريف تجهيز الجنازة"},
+    {"kod": "2.8.2", "sk": "تجهيز الجنازة", "sp": "ذكر الدليل على مشروعية تجهيز الجنازة"},
+    {"kod": "2.8.3", "sk": "تجهيز الجنازة", "sp": "توضيح حكم تجهيز الجنازة"},
+    {"kod": "2.8.4", "sk": "تجهيز الجنازة", "sp": "بيان حقوق الجنازة"},
+    {"kod": "2.8.5", "sk": "تجهيز الجنازة", "sp": "بيان كيفية تجهيز الجنازة : (i) الغسل (ii) الكفن (iii) الصلاة (iv) الدفن"},
+    {"kod": "2.8.6", "sk": "تجهيز الجنازة", "sp": "توضيح المسائل المتعلقة : (i) حكم المفقود (ii) حكم الأعضاء المقطوعة (iii) حكم دفن المرتد والمنتحر في مقبرة المسلم"},
+    {"kod": "2.8.7", "sk": "تجهيز الجنازة", "sp": "بيان حكمة مشروعية تجهيز الجنازة"},
+    {"kod": "2.8.8", "sk": "تجهيز الجنازة", "sp": "تطبيق عملية تجهيز الجنازة : (i) الغسل (ii) الكفن (iii) الصلاة"},
+
+    # Bidang Fiqh Munakahat
+    {"kod": "3.1.1", "sk": "الأسرة في الإسلام", "sp": "ذكر أهمية الأسرة في الإسلام"},
+    {"kod": "3.1.2", "sk": "الأسرة في الإسلام", "sp": "بيان الترغيب في النكاح"},
+    {"kod": "3.1.3", "sk": "الأسرة في الإسلام", "sp": "توضيح الصفات المطلوبة في الزوجين"},
+    {"kod": "3.1.4", "sk": "الأسرة في الإسلام", "sp": "بيان الحكمة في تكوين الأسرة المسلمة"},
+    {"kod": "3.1.5", "sk": "الأسرة في الإسلام", "sp": "تقدير الحياة الأسرية في الإسلام"},
+
+    {"kod": "3.2.1", "sk": "الخطبة", "sp": "ذكر تعريف الخطبة"},
+    {"kod": "3.2.2", "sk": "الخطبة", "sp": "ذكر دليل مشروعية الخطبة"},
+    {"kod": "3.2.3", "sk": "الخطبة", "sp": "توضيح حكم الخطبة"},
+    {"kod": "3.2.4", "sk": "الخطبة", "sp": "بيان شروط صحة الخطبة"},
+    {"kod": "3.2.5", "sk": "الخطبة", "sp": "بيان حكمة الخطبة"},
+    {"kod": "3.2.6", "sk": "الخطبة", "sp": "توضيح المسائل المتعلقة : (i) الاستشارة في الخاطب أو المخطوبة (ii) النظر إلى المخطوبة (iii) الخلوة والاختلاط بين الخاطب والمخطوبة (iv) العدول عن الخطبة"},
+    {"kod": "3.2.7", "sk": "الخطبة", "sp": "المحافظة على آداب الاختلاط بين الخاطب والمخطوبة"},
+
+    {"kod": "3.3.1", "sk": "النكاح", "sp": "ذكر تعريف النكاح"},
+    {"kod": "3.3.2", "sk": "النكاح", "sp": "ذكر دليل مشروعية النكاح"},
+    {"kod": "3.3.3", "sk": "النكاح", "sp": "توضيح حكم النكاح"},
+    {"kod": "3.3.4", "sk": "النكاح", "sp": "بيان أركان النكاح"},
+    {"kod": "3.3.5", "sk": "النكاح", "sp": "بيان شروط صحة النكاح"},
+    {"kod": "3.3.6", "sk": "النكاح", "sp": "بيان سنن العقد"},
+    {"kod": "3.3.7", "sk": "النكاح", "sp": "توضيح المحرمات من النساء"},
+    {"kod": "3.3.8", "sk": "النكاح", "sp": "بيان حكمة النكاح"},
+    {"kod": "3.3.9", "sk": "النكاح", "sp": "توضيح المسائل المتعلقة : (i) نكاح المتعة والشغار والمحلل (ii) النكاح بين الإنس والجن (iii) نكاح المسيار (iv) الوكالة في عقد النكاح"},
+    {"kod": "3.3.10", "sk": "النكاح", "sp": "اجتناب الزنا عن طريق النكاح"},
+
+    {"kod": "3.4.1", "sk": "الحقوق الزوجية", "sp": "بيان حقوق الزوج : (i) حق طاعة الزوجة لزوجها (ii) حق تأديب الزوجة (iii) الأمانة (iv) المعاشرة بالمعروف"},
+    {"kod": "3.4.2", "sk": "الحقوق الزوجية", "sp": "بيان حقوق الزوجة المالية : (i) المهر (ii) النفقة"},
+    {"kod": "3.4.3", "sk": "الحقوق الزوجية", "sp": "بيان حقوق الزوجة غير المالية : (i) إحسان العشرة (ii) المعاملة الطيبة (iii) العدل"},
+    {"kod": "3.4.4", "sk": "الحقوق الزوجية", "sp": "توضيح الحقوق المشتركة بين الزوجين : (i) حق الاستمتاع (ii) ثبوت النسب (iii) التوارث (iv) حرمة المصاهرة"},
+    {"kod": "3.4.5", "sk": "الحقوق الزوجية", "sp": "حماية الحقوق الزوجية"},
+
+    {"kod": "3.5.1", "sk": "النشوز", "sp": "ذكر تعريف النشوز"},
+    {"kod": "3.5.2", "sk": "النشوز", "sp": "ذكر دليل النشوز"},
+    {"kod": "3.5.3", "sk": "النشوز", "sp": "توضيح حكم النشوز"},
+    {"kod": "3.5.4", "sk": "النشوز", "sp": "توضيح صور النشوز"},
+    {"kod": "3.5.5", "sk": "النشوز", "sp": "توضيح معالجة النشوز"},
+    {"kod": "3.5.6", "sk": "النشوز", "sp": "مراعاة الحدود الزوجية"},
+
+    # Bidang Fiqh Muamalat
+    {"kod": "4.1.1", "sk": "المعاملات", "sp": "ذكر تعريف المعاملات"},
+    {"kod": "4.1.2", "sk": "المعاملات", "sp": "ذكر دليل مشروعية المعاملات"},
+    {"kod": "4.1.3", "sk": "المعاملات", "sp": "بيان خصائص المعاملات في الإسلام"},
+    {"kod": "4.1.4", "sk": "المعاملات", "sp": "الصدق والأمانة في المعاملات"},
+
+    {"kod": "4.2.1", "sk": "الربا", "sp": "ذكر تعريف الربا"},
+    {"kod": "4.2.2", "sk": "الربا", "sp": "ذكر دليل تحريم الربا"},
+    {"kod": "4.2.3", "sk": "الربا", "sp": "بيان أنواع الربا"},
+    {"kod": "4.2.4", "sk": "الربا", "sp": "بيان الآثار المترتبة على الربا"},
+    {"kod": "4.2.5", "sk": "الربا", "sp": "ملازمة اجتناب المحرمات في المعاملات"},
+
+    {"kod": "4.3.1", "sk": "الغرر", "sp": "ذكر تعريف الغرر"},
+    {"kod": "4.3.2", "sk": "الغرر", "sp": "ذكر دليل تحريم الغرر"},
+    {"kod": "4.3.3", "sk": "الغرر", "sp": "بيان أنواع الغرر"},
+    {"kod": "4.3.4", "sk": "الغرر", "sp": "بيان الآثار المترتبة على الغرر"},
+    {"kod": "4.3.5", "sk": "الغرر", "sp": "ملازمة اجتناب المحرمات في المعاملات"},
+
+    {"kod": "4.4.1", "sk": "التدليس", "sp": "ذكر تعريف التدليس"},
+    {"kod": "4.4.2", "sk": "التدليس", "sp": "ذكر دليل تحريم التدليس"},
+    {"kod": "4.4.3", "sk": "التدليس", "sp": "بيان أنواع التدليس"},
+    {"kod": "4.4.4", "sk": "التدليس", "sp": "بيان الآثار المترتبة على التدليس"},
+    {"kod": "4.4.5", "sk": "التدليس", "sp": "ملازمة اجتناب المحرمات في المعاملات"},
+
+    {"kod": "4.5.1", "sk": "المقامرة", "sp": "ذكر تعريف المقامرة"},
+    {"kod": "4.5.2", "sk": "المقامرة", "sp": "ذكر دليل تحريم المقامرة"},
+    {"kod": "4.5.3", "sk": "المقامرة", "sp": "بيان أنواع المقامرة"},
+    {"kod": "4.5.4", "sk": "المقامرة", "sp": "بيان الآثار المترتبة على المقامرة"},
+    {"kod": "4.5.5", "sk": "المقامرة", "sp": "ملازمة اجتناب المحرمات في المعاملات"}
+];
+
+// Structure Default State
+const defaultState = {
+    currentTingkatan: "3 ARIF",
+    currentTab: "murid",
+    muridList: JSON.parse(JSON.stringify(defaultMuridList)),
+    dskpList: {
+        "3 ARIF": JSON.parse(JSON.stringify(defaultDskpTingkatan3)),
+        "4 ARIF": [],
+        "5 ARIF": []
+    },
+    jsuList: {
+        "3 ARIF": [],
+        "4 ARIF": [],
+        "5 ARIF": []
+    },
+    historyStack: []
+};
+
+let appState = JSON.parse(localStorage.getItem('myClassInsightData')) || JSON.parse(JSON.stringify(defaultState));
+
+// Save State with Undo
+function saveState(actionMessage = "") {
+    if (actionMessage) {
+        if (!appState.historyStack) appState.historyStack = [];
+        const snapshot = {
+            time: new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            msg: actionMessage,
+            data: JSON.parse(JSON.stringify({ muridList: appState.muridList, dskpList: appState.dskpList, jsuList: appState.jsuList }))
+        };
+        appState.historyStack.push(snapshot);
+        if (appState.historyStack.length > 15) appState.historyStack.shift();
+    }
+    localStorage.setItem('myClassInsightData', JSON.stringify(appState));
+    updateUndoButtonUI();
+}
+
+function updateUndoButtonUI() {
+    const btnUndo = document.getElementById('btnUndo');
+    const badge = document.getElementById('undoCountBadge');
+    if (!btnUndo || !badge) return;
+    
+    const count = appState.historyStack ? appState.historyStack.length : 0;
+    if (count > 0) {
+        btnUndo.disabled = false;
+        btnUndo.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-teal-950/80');
+        btnUndo.classList.add('bg-teal-800', 'hover:bg-teal-700', 'text-white', 'cursor-pointer');
+        badge.classList.remove('hidden');
+        badge.innerText = count;
+    } else {
+        btnUndo.disabled = true;
+        btnUndo.classList.add('opacity-50', 'cursor-not-allowed', 'bg-teal-950/80');
+        btnUndo.classList.remove('bg-teal-800', 'hover:bg-teal-700', 'text-white', 'cursor-pointer');
+        badge.classList.add('hidden');
+    }
+}
+
+window.undoLastAction = function() {
+    if (!appState.historyStack || appState.historyStack.length === 0) return;
+    const lastSnap = appState.historyStack.pop();
+    appState.muridList = lastSnap.data.muridList;
+    appState.dskpList = lastSnap.data.dskpList;
+    appState.jsuList = lastSnap.data.jsuList;
+    
+    localStorage.setItem('myClassInsightData', JSON.stringify(appState));
+    showToast(`Undo Berjaya: ${lastSnap.msg}`, 'info');
+    renderAll();
+};
+
+window.setTingkatanContext = function(ting) {
+    appState.currentTingkatan = ting;
+    
+    document.querySelectorAll('[id^="ting-"]').forEach(btn => btn.classList.remove('active-tingkatan'));
+    if (ting === '3 ARIF') document.getElementById('ting-3')?.classList.add('active-tingkatan');
+    if (ting === '4 ARIF') document.getElementById('ting-4')?.classList.add('active-tingkatan');
+    if (ting === '5 ARIF') document.getElementById('ting-5')?.classList.add('active-tingkatan');
+    if (ting === 'ALUMNI') document.getElementById('ting-alumni')?.classList.add('active-tingkatan');
+    if (ting === 'SEMUA') document.getElementById('ting-semua')?.classList.add('active-tingkatan');
+
+    renderAll();
+};
+
+window.switchTab = function(tab) {
+    appState.currentTab = tab;
+    ['murid', 'dskp', 'jsu', 'analisis'].forEach(t => {
+        const sec = document.getElementById(`content-${t}`);
+        const btn = document.getElementById(`tab-${t}`);
+        if (sec) sec.classList.toggle('hidden', t !== tab);
+        if (btn) {
+            btn.classList.toggle('active-subtab', t === tab);
+            btn.classList.toggle('text-teal-200', t !== tab);
+        }
+    });
+    renderAll();
+};
+
+function renderBanner() {
+    const ting = appState.currentTingkatan;
+    const badge = document.getElementById('bannerBadge');
+    const labelDskp = document.getElementById('labelDskpTingkatan');
+    const labelJsu = document.getElementById('labelJsuTingkatan');
+    const labelAnalisis = document.getElementById('labelAnalisisTingkatan');
+
+    if (badge) badge.innerText = ting;
+    if (labelDskp) labelDskp.innerText = ting;
+    if (labelJsu) labelJsu.innerText = ting;
+    if (labelAnalisis) labelAnalisis.innerText = ting;
+
+    // Filter murid
+    const filteredMurid = appState.muridList.filter(m => ting === 'SEMUA' || m.kelas === ting);
+    document.getElementById('bannerCountMurid').innerText = filteredMurid.length;
+
+    // Filter DSKP
+    let dskpCount = 0;
+    if (ting === 'SEMUA') {
+        Object.values(appState.dskpList).forEach(arr => dskpCount += arr.length);
+    } else if (appState.dskpList[ting]) {
+        dskpCount = appState.dskpList[ting].length;
+    }
+    document.getElementById('bannerCountDskp').innerText = `${dskpCount} Tajuk`;
+
+    // Filter JSU
+    let jsuCount = 0;
+    if (ting === 'SEMUA') {
+        Object.values(appState.jsuList).forEach(arr => jsuCount += arr.length);
+    } else if (appState.jsuList[ting]) {
+        jsuCount = appState.jsuList[ting].length;
+    }
+    document.getElementById('bannerCountJsu').innerText = `${jsuCount} Soalan`;
+}
+
+window.renderMuridTable = function() {
+    const ting = appState.currentTingkatan;
+    const query = (document.getElementById('searchMurid')?.value || "").toLowerCase();
+    const thead = document.getElementById('studentTableHeader');
+    const tbody = document.getElementById('studentTableBody');
+    const empty = document.getElementById('studentEmptyState');
+
+    const filtered = appState.muridList.filter(m => {
+        const matchTing = (ting === 'SEMUA') || (m.kelas === ting);
+        const matchQuery = m.nama.toLowerCase().includes(query);
+        return matchTing && matchQuery;
+    });
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+    }
+    empty.classList.add('hidden');
+
+    if (ting === 'ALUMNI') {
+        thead.innerHTML = `
+            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                <th class="px-4 py-3.5 w-12 text-center">Bil</th>
+                <th class="px-4 py-3.5">Nama Alumni</th>
+                <th class="px-4 py-3.5 w-32">Status</th>
+                <th class="px-4 py-3.5 w-36 text-center">Keputusan SPM Al-Syariah</th>
+                <th class="px-4 py-3.5 w-24 text-center">Tindakan</th>
+            </tr>`;
+        
+        tbody.innerHTML = filtered.map((m, idx) => `
+            <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                <td class="px-4 py-3 text-center font-bold text-slate-400">${idx + 1}</td>
+                <td class="px-4 py-3 font-bold text-slate-800">${m.nama}</td>
+                <td class="px-4 py-3"><span class="bg-amber-100 text-amber-900 font-black px-2 py-0.5 rounded text-[10px]">ALUMNI SPM</span></td>
+                <td class="px-4 py-3 text-center">
+                    <select onchange="window.kemaskiniGredSpm('${m.id}', this.value)" class="bg-amber-50 border border-amber-300 rounded px-2 py-1 font-black text-amber-900 text-xs">
+                        <option value="" ${!m.gredSpm ? 'selected' : ''}>- Belum Diumum -</option>
+                        ${['A+', 'A', 'A-', 'B+', 'B', 'C+', 'C', 'D', 'E', 'G'].map(g => `<option value="${g}" ${m.gredSpm === g ? 'selected' : ''}>Gred ${g}</option>`).join('')}
+                    </select>
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <button onclick="window.padamMurid('${m.id}')" class="text-rose-600 hover:text-rose-800 font-bold"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('');
+    } else {
+        thead.innerHTML = `
+            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                <th class="px-4 py-3.5 w-12 text-center">Bil</th>
+                <th class="px-4 py-3.5">Nama Murid</th>
+                <th class="px-4 py-3.5 w-28">Kelas</th>
+                <th class="px-4 py-3.5 w-40 text-center">Tahap Penguasaan (TP)</th>
+                <th class="px-4 py-3.5 w-24 text-center">Tindakan</th>
+            </tr>`;
+
+        tbody.innerHTML = filtered.map((m, idx) => `
+            <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                <td class="px-4 py-3 text-center font-bold text-slate-400">${idx + 1}</td>
+                <td class="px-4 py-3 font-bold text-slate-800">${m.nama}</td>
+                <td class="px-4 py-3"><span class="bg-teal-100 text-teal-800 font-extrabold px-2 py-0.5 rounded text-[10px]">${m.kelas}</span></td>
+                <td class="px-4 py-3 text-center">
+                    <select onchange="window.kemaskiniTpMurid('${m.id}', this.value)" class="bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 font-bold text-teal-700 text-xs">
+                        ${[1, 2, 3, 4, 5, 6].map(tp => `<option value="${tp}" ${m.tp == tp ? 'selected' : ''}>TP ${tp}</option>`).join('')}
+                    </select>
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <button onclick="window.padamMurid('${m.id}')" class="text-rose-600 hover:text-rose-800 font-bold"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join('');
+    }
+};
+
+window.renderDskpTable = function() {
+    const ting = appState.currentTingkatan;
+    const tbody = document.getElementById('dskpTableBody');
+    const empty = document.getElementById('dskpEmptyState');
+
+    let items = [];
+    if (ting === 'SEMUA') {
+        Object.values(appState.dskpList).forEach(arr => items.push(...arr));
+    } else if (appState.dskpList[ting]) {
+        items = appState.dskpList[ting];
+    }
+
+    if (items.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+    }
+    empty.classList.add('hidden');
+
+    tbody.innerHTML = items.map((item, idx) => `
+        <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="px-4 py-3 font-mono font-bold text-teal-700">${item.kod}</td>
+            <td class="px-4 py-3 font-bold text-slate-800">${item.sk}</td>
+            <td class="px-4 py-3 text-slate-700 font-medium leading-relaxed">${item.sp}</td>
+            <td class="px-4 py-3 text-center">
+                <button onclick="window.padamDskpItem('${ting}', ${idx})" class="text-rose-600 hover:text-rose-800 font-bold"><i class="fa-solid fa-trash"></i></button>
+            </td>
+        </tr>
+    `).join('');
+};
+
+window.renderJsuTable = function() {
+    const ting = appState.currentTingkatan;
+    const tbody = document.getElementById('jsuTableBody');
+    const empty = document.getElementById('jsuEmptyState');
+
+    let items = [];
+    if (ting === 'SEMUA') {
+        Object.values(appState.jsuList).forEach(arr => items.push(...arr));
+    } else if (appState.jsuList[ting]) {
+        items = appState.jsuList[ting];
+    }
+
+    if (items.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+    }
+    empty.classList.add('hidden');
+
+    tbody.innerHTML = items.map((item, idx) => `
+        <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="px-4 py-3 font-bold text-slate-700">Bahagian ${item.bahagian}</td>
+            <td class="px-4 py-3 font-mono font-bold text-indigo-700">${item.no}</td>
+            <td class="px-4 py-3 font-bold text-slate-800">${item.bidang}</td>
+            <td class="px-4 py-3 text-slate-700 font-medium">${item.topik}</td>
+            <td class="px-4 py-3 text-center font-black text-teal-700">${item.markah}m</td>
+            <td class="px-4 py-3"><span class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded text-[10px]">${item.konstrukt}</span></td>
+            <td class="px-4 py-3 text-center font-bold text-slate-600">${item.aras}</td>
+            <td class="px-4 py-3 text-center">
+                ${item.link ? `<a href="${item.link}" target="_blank" class="text-teal-600 hover:underline font-bold"><i class="fa-solid fa-link"></i> Buka</a>` : `<span class="text-slate-300">-</span>`}
+            </td>
+            <td class="px-4 py-3 text-center">
+                <button onclick="window.padamJsuItem('${ting}', ${idx})" class="text-rose-600 hover:text-rose-800 font-bold"><i class="fa-solid fa-trash"></i></button>
+            </td>
+        </tr>
+    `).join('');
+};
+
+window.renderAnalisis = function() {
+    const ting = appState.currentTingkatan;
+    const alumniCards = document.getElementById('alumniStatsCards');
+    const title = document.getElementById('analisisTitle');
+    const container = document.getElementById('analisisBarsContainer');
+
+    const filtered = appState.muridList.filter(m => ting === 'SEMUA' || m.kelas === ting);
+
+    if (ting === 'ALUMNI') {
+        alumniCards.classList.remove('hidden');
+        title.innerHTML = `<i class="fa-solid fa-graduation-cap text-amber-600"></i> Analisis Keputusan SPM Al-Syariah (Alumni)`;
+
+        const total = filtered.length;
+        if (total === 0) {
+            container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Tiada rekod alumni untuk dianalisis.</p>`;
+            return;
+        }
+
+        let lulusCount = 0, cemerlangCount = 0;
+        let totalGpaPoints = 0;
+        const gredValueMap = { 'A+':0, 'A':1, 'A-':2, 'B+':3, 'B':4, 'C+':5, 'C':6, 'D':7, 'E':8, 'G':9 };
+
+        filtered.forEach(m => {
+            if (m.gredSpm) {
+                if (['A+', 'A', 'A-', 'B+', 'B', 'C+', 'C', 'D', 'E'].includes(m.gredSpm)) lulusCount++;
+                if (['A+', 'A', 'A-'].includes(m.gredSpm)) cemerlangCount++;
+                if (gredValueMap[m.gredSpm] !== undefined) totalGpaPoints += gredValueMap[m.gredSpm];
+            }
+        });
+
+        const gpmp = (total > 0) ? (totalGpaPoints / total).toFixed(2) : "0.00";
+        const pctLulus = (total > 0) ? ((lulusCount / total) * 100).toFixed(1) : "0";
+
+        document.getElementById('statGpmp').innerText = gpmp;
+        document.getElementById('statLulus').innerText = `${pctLulus}%`;
+        document.getElementById('statCemerlang').innerText = `${cemerlangCount} Orang`;
+
+        container.innerHTML = `
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <p class="text-xs font-bold text-slate-700 mb-2">Ringkasan Pencapaian Alumni (${total} Orang Murid)</p>
+                <div class="w-full bg-slate-200 h-4 rounded-full overflow-hidden flex">
+                    <div style="width: ${(cemerlangCount/total)*100}%" class="bg-indigo-600 h-full" title="Cemerlang"></div>
+                    <div style="width: ${((lulusCount - cemerlangCount)/total)*100}%" class="bg-emerald-500 h-full" title="Lulus"></div>
+                    <div style="width: ${((total - lulusCount)/total)*100}%" class="bg-rose-500 h-full" title="Gagal"></div>
+                </div>
+            </div>`;
+    } else {
+        alumniCards.classList.add('hidden');
+        title.innerHTML = `<i class="fa-solid fa-chart-simple text-teal-600"></i> Taburan Tahap Penguasaan (TP) PBD`;
+
+        const total = filtered.length;
+        if (total === 0) {
+            container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Tiada murid dalam kategori ini.</p>`;
+            return;
+        }
+
+        const counts = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0 };
+        filtered.forEach(m => { if(m.tp >= 1 && m.tp <= 6) counts[m.tp]++; });
+
+        container.innerHTML = [1,2,3,4,5,6].map(tp => {
+            const cnt = counts[tp];
+            const pct = ((cnt / total) * 100).toFixed(1);
+            return `
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1">
+                        <span class="text-slate-700">Tahap Penguasaan ${tp} (TP ${tp})</span>
+                        <span class="text-teal-700">${cnt} Murid (${pct}%)</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+                        <div class="bg-teal-600 h-full transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+};
+
+function renderAll() {
+    renderBanner();
+    window.renderMuridTable();
+    window.renderDskpTable();
+    window.renderJsuTable();
+    window.renderAnalisis();
+    updateUndoButtonUI();
+}
+
+// Student Operations
+window.openModalTambahMurid = function() {
+    document.getElementById('modalTambahMurid').classList.remove('hidden');
+};
+window.closeModalTambahMurid = function() {
+    document.getElementById('modalTambahMurid').classList.add('hidden');
+};
+window.toggleInputsTambahMurid = function() {
+    const k = document.getElementById('inputKelas').value;
+    document.getElementById('containerInputTp').classList.toggle('hidden', k === 'ALUMNI');
+    document.getElementById('containerInputGredSpm').classList.toggle('hidden', k !== 'ALUMNI');
+};
+window.simpanMuridBaharu = function(e) {
+    e.preventDefault();
+    const nama = document.getElementById('inputNamaMurid').value.trim().toUpperCase();
+    const kelas = document.getElementById('inputKelas').value;
+    const tp = parseInt(document.getElementById('inputTp').value);
+    const gredSpm = document.getElementById('inputGredSpm').value;
+
+    if (!nama) return;
+
+    appState.muridList.push({ id: `M-${Date.now()}`, nama, kelas, status: 'AKTIF', tp, gredSpm: kelas === 'ALUMNI' ? gredSpm : "" });
+    saveState(`Tambah Murid: ${nama}`);
+    window.closeModalTambahMurid();
+    showToast("Murid baharu berjaya ditambah", "success");
+    renderAll();
+};
+window.kemaskiniTpMurid = function(id, val) {
+    const m = appState.muridList.find(x => String(x.id) === String(id));
+    if (m) {
+        m.tp = parseInt(val);
+        saveState(`Kemaskini TP ${m.nama} -> TP${val}`);
+        renderAll();
+    }
+};
+window.kemaskiniGredSpm = function(id, val) {
+    const m = appState.muridList.find(x => String(x.id) === String(id));
+    if (m) {
+        m.gredSpm = val;
+        saveState(`Kemaskini Gred SPM ${m.nama} -> ${val}`);
+        renderAll();
+    }
+};
+window.padamMurid = function(id) {
+    const m = appState.muridList.find(x => String(x.id) === String(id));
+    if (m && confirm(`Adakah anda pasti untuk memadam rekod ${m.nama}?`)) {
+        appState.muridList = appState.muridList.filter(x => String(x.id) !== String(id));
+        saveState(`Padam Murid: ${m.nama}`);
+        showToast("Rekod murid dipadam", "info");
+        renderAll();
+    }
+};
+
+// DSKP Operations
+window.openModalTambahSp = function() {
+    document.getElementById('modalTambahSp').classList.remove('hidden');
+};
+window.closeModalTambahSp = function() {
+    document.getElementById('modalTambahSp').classList.add('hidden');
+};
+window.simpanSpBaharu = function(e) {
+    e.preventDefault();
+    const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
+    const kod = document.getElementById('inputSpKod').value.trim();
+    const sk = document.getElementById('inputSpSk').value.trim();
+    const sp = document.getElementById('inputSpSp').value.trim();
+
+    if (!appState.dskpList[ting]) appState.dskpList[ting] = [];
+    appState.dskpList[ting].push({ kod, sk, sp });
+
+    saveState(`Tambah SP DSKP ${kod} (${ting})`);
+    window.closeModalTambahSp();
+    showToast("Standard Pembelajaran berjaya ditambah", "success");
+    renderAll();
+};
+window.padamDskpItem = function(ting, idx) {
+    const t = ting === 'SEMUA' ? '3 ARIF' : ting;
+    if (appState.dskpList[t] && confirm("Padam tajuk DSKP ini?")) {
+        appState.dskpList[t].splice(idx, 1);
+        saveState(`Padam SP DSKP (${t})`);
+        renderAll();
+    }
+};
+
+// JSU Operations
+window.openModalTambahJsu = function() {
+    document.getElementById('modalTambahJsu').classList.remove('hidden');
+};
+window.closeModalTambahJsu = function() {
+    document.getElementById('modalTambahJsu').classList.add('hidden');
+};
+window.simpanJsuBaharu = function(e) {
+    e.preventDefault();
+    const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
+    const bahagian = document.getElementById('inputJsuBahagian').value;
+    const no = document.getElementById('inputJsuNo').value.trim();
+    const bidang = document.getElementById('inputJsuBidang').value.trim();
+    const topik = document.getElementById('inputJsuTopik').value.trim();
+    const markah = parseInt(document.getElementById('inputJsuMarkah').value);
+    const konstrukt = document.getElementById('inputJsuKonstrukt').value;
+    const aras = document.getElementById('inputJsuAras').value;
+    const link = document.getElementById('inputJsuLink').value.trim();
+
+    if (!appState.jsuList[ting]) appState.jsuList[ting] = [];
+    appState.jsuList[ting].push({ bahagian, no, bidang, topik, markah, konstrukt, aras, link });
+
+    saveState(`Tambah Soalan JSU ${no} (${ting})`);
+    window.closeModalTambahJsu();
+    showToast("Soalan JSU berjaya disimpan", "success");
+    renderAll();
+};
+window.padamJsuItem = function(ting, idx) {
+    const t = ting === 'SEMUA' ? '3 ARIF' : ting;
+    if (appState.jsuList[t] && confirm("Padam soalan JSU ini?")) {
+        appState.jsuList[t].splice(idx, 1);
+        saveState(`Padam Soalan JSU (${t})`);
+        renderAll();
+    }
+};
+window.janaPresetJsuFormat = function() {
+    const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
+    const preset = [
+        { bahagian: "A", no: "1(a)", bidang: "Al-Quran & Tajwid", topik: "Hukum Tajwid Mad Far'i", markah: 5, konstrukt: "Mengingat", aras: "Rendah", link: "" },
+        { bahagian: "A", no: "1(b)", bidang: "Al-Quran & Hafazan", topik: "Ayat Hafazan Surah Al-Baqarah", markah: 5, konstrukt: "Mengingat", aras: "Rendah", link: "" },
+        { bahagian: "A", no: "2(a)", bidang: "Ayat Kefahaman", topik: "Hidayah Allah SWT Pemangkin Kesejahteraan", markah: 5, konstrukt: "Memahami", aras: "Sederhana", link: "" },
+        { bahagian: "A", no: "2(b)", bidang: "Ayat Kefahaman", topik: "Menjauhi Kemungkaran", markah: 5, konstrukt: "Mengaplikasi", aras: "Tinggi", link: "" },
+        { bahagian: "B", no: "3(a)", bidang: "Fiqh Ibadah", topik: "صوم رمضان - شروط وأركان", markah: 10, konstrukt: "Memahami", aras: "Sederhana", link: "" },
+        { bahagian: "B", no: "3(b)", bidang: "Fiqh Ibadah", topik: "صلاة الجمع والقصر", markah: 10, konstrukt: "Mengaplikasi", aras: "Sederhana", link: "" },
+        { bahagian: "B", no: "4(a)", bidang: "Fiqh Munakahat", topik: "الأسرة في الإسلام والخطبة", markah: 10, konstrukt: "Memahami", aras: "Sederhana", link: "" },
+        { bahagian: "B", no: "4(b)", bidang: "Fiqh Munakahat", topik: "النكاح والحقوق الزوجية", markah: 10, konstrukt: "Menganalisis", aras: "Tinggi", link: "" },
+        { bahagian: "B", no: "5(a)", bidang: "Fiqh Muamalat", topik: "المعاملات والربا", markah: 10, konstrukt: "Memahami", aras: "Sederhana", link: "" },
+        { bahagian: "B", no: "5(b)", bidang: "Fiqh Muamalat", topik: "الغرر والتدليس والمقامرة", markah: 10, konstrukt: "Menilai", aras: "Tinggi", link: "" }
+    ];
+
+    appState.jsuList[ting] = preset;
+    saveState(`Jana Preset JSU Format (${ting})`);
+    showToast(`Format Standard KBD berjaya dijana untuk ${ting}!`, "success");
+    renderAll();
+};
+window.paparModalJsuFull = function() {
+    const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
+    document.getElementById('jsuMatrixTitle').innerText = `JADUAL SPESIFIKASI UJIAN (JSU) AL-SYARIAH - ${ting}`;
+    const items = appState.jsuList[ting] || [];
+    const tbody = document.getElementById('jsuMatrixTableBody');
+
+    if (items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">Tiada soalan JSU untuk dicetak bagi ${ting}.</td></tr>`;
+    } else {
+        tbody.innerHTML = items.map(item => `
+            <tr>
+                <td class="border border-slate-300 px-3 py-2 font-bold">Bahagian ${item.bahagian}</td>
+                <td class="border border-slate-300 px-3 py-2 font-mono font-bold">${item.no}</td>
+                <td class="border border-slate-300 px-3 py-2"><strong>${item.bidang}:</strong> ${item.topik}</td>
+                <td class="border border-slate-300 px-3 py-2 text-center font-bold">${item.markah}</td>
+                <td class="border border-slate-300 px-3 py-2">${item.konstrukt}</td>
+                <td class="border border-slate-300 px-3 py-2 text-center">${item.aras}</td>
+            </tr>
+        `).join('');
+    }
+    document.getElementById('modalJsuFull').classList.remove('hidden');
+};
+window.tutupModalJsuFull = function() {
+    document.getElementById('modalJsuFull').classList.add('hidden');
+};
+window.printJsuMatrix = function() {
+    window.print();
+};
+
+// Naik Kelas & History Modals
+window.bukaModalNaikKelas = function() {
+    document.getElementById('chkSahNaikKelas').checked = false;
+    window.toggleBtnNaikKelas();
+    document.getElementById('modalNaikKelas').classList.remove('hidden');
+};
+window.tutupModalNaikKelas = function() {
+    document.getElementById('modalNaikKelas').classList.add('hidden');
+};
+window.toggleBtnNaikKelas = function() {
+    const chk = document.getElementById('chkSahNaikKelas').checked;
+    const btn = document.getElementById('btnLaksanaNaikKelas');
+    btn.disabled = !chk;
+    if (chk) {
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        btn.classList.add('hover:bg-amber-500', 'cursor-pointer');
+    } else {
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.classList.remove('hover:bg-amber-500', 'cursor-pointer');
+    }
+};
+window.sahDanLaksanaNaikKelas = function() {
+    appState.muridList.forEach(m => {
+        if (m.kelas === '3 ARIF') m.kelas = '4 ARIF';
+        else if (m.kelas === '4 ARIF') m.kelas = '5 ARIF';
+        else if (m.kelas === '5 ARIF') { m.kelas = 'ALUMNI'; m.gredSpm = ""; }
+    });
+
+    saveState("Proses Naik Kelas Sesi Baharu");
+    window.tutupModalNaikKelas();
+    showToast("Proses Naik Kelas Berjaya Dilaksanakan!", "success");
+    renderAll();
+};
+window.openHistoryModal = function() {
+    const container = document.getElementById('historyListContainer');
+    const stack = appState.historyStack || [];
+    if (stack.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Tiada sejarah perubahan direkodkan lagi.</p>`;
+    } else {
+        container.innerHTML = stack.slice().reverse().map(item => `
+            <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs flex justify-between items-center">
+                <div>
+                    <span class="font-bold text-slate-800">${item.msg}</span>
+                    <span class="block text-[10px] text-slate-400">${item.time}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+    document.getElementById('modalHistory').classList.remove('hidden');
+};
+window.closeHistoryModal = function() {
+    document.getElementById('modalHistory').classList.add('hidden');
+};
+
+// Data Backup & Reset
+window.exportData = function() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `MyClassInsight_Backup_${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+    showToast("Data fail eksport berjaya dimuat turun", "success");
+};
+window.importData = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const imported = JSON.parse(e.target.result);
+            if (imported && imported.muridList) {
+                appState = imported;
+                saveState("Import Data Sandaran");
+                showToast("Data berjaya di-import!", "success");
+                renderAll();
+            } else {
+                alert("Format fail JSON tidak sah!");
+            }
+        } catch (err) {
+            alert("Ralat semasa membaca fail JSON.");
+        }
+    };
+    reader.readAsText(file);
+};
+window.resetToDefaultData = function() {
+    if (confirm("Adakah anda pasti untuk menetapkan semula semua data ke asal? Sila buat eksport terlebih dahulu jika perlu.")) {
+        appState = JSON.parse(JSON.stringify(defaultState));
+        localStorage.removeItem('myClassInsightData');
+        showToast("Sistem ditetapkan semula ke data asal", "info");
+        renderAll();
+    }
+};
+
+function showToast(msg, type = "info") {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'info' ? 'bg-teal-700' : 'bg-rose-600';
+    toast.className = `${bgClass} text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce`;
+    toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// Initial Boot
+document.addEventListener('DOMContentLoaded', () => {
+    window.setTingkatanContext(appState.currentTingkatan || '3 ARIF');
+});
+</script>
+</body>
+</html>
