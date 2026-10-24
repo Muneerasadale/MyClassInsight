@@ -11,9 +11,8 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
         .active-tingkatan {
             background-color: #0f766e !important;
             color: #ffffff !important;
@@ -27,24 +26,58 @@
             font-weight: 800 !important;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        /* TAPAN MESRA CETAK & PRATONTON (PRINT PREVIEW FIX) */
         @media print {
-            body * { visibility: hidden; }
-            #printableJsuModal, #printableJsuModal * { visibility: visible; }
-            #printableJsuModal { position: absolute; left: 0; top: 0; width: 100%; background: white; }
-            .no-print { display: none !important; }
+            header, footer, #toastContainer, #globalErrorDisplay, .no-print, 
+            button, select:not(.print-show), input, #contextBanner {
+                display: none !important;
+            }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            main {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .shadow-sm, .shadow-xl, .shadow-2xl, .border {
+                box-shadow: none !important;
+                border-color: #cbd5e1 !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th, td {
+                border: 1px solid #94a3b8 !important;
+                padding: 6px 8px !important;
+                color: #000000 !important;
+            }
+            #modalJsuFull:not(.hidden) {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                background: white !important;
+                z-index: 9999 !important;
+            }
         }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen flex flex-col antialiased text-slate-800">
 
-<!-- Error Alert Banner (Penyemak Ralat Skrip) -->
+<!-- Error Alert Display -->
 <div id="globalErrorDisplay" class="hidden bg-rose-600 text-white p-3 text-xs font-bold text-center z-50"></div>
 
 <!-- Header Top Bar -->
 <header class="bg-gradient-to-r from-teal-950 via-teal-900 to-emerald-950 text-white shadow-xl sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
         
-        <!-- Logo & System Title -->
         <div class="flex items-center gap-3">
             <div class="bg-teal-800/80 p-2.5 rounded-2xl border border-teal-500/30 shadow-inner">
                 <i class="fa-solid fa-graduation-cap text-2xl text-emerald-300"></i>
@@ -53,11 +86,10 @@
                 <h1 class="font-black text-lg md:text-xl tracking-tight flex items-center gap-2">
                     MyClassInsight <span class="bg-emerald-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">KBD Al-Syariah</span>
                 </h1>
-                <p class="text-xs text-teal-200/90 font-medium">Sistem Pengurusan PBD, DSKP, JSU & Keputusan SPM Alumni</p>
+                <p class="text-xs text-teal-200/90 font-medium">Sistem Pengurusan Rekod Transit PBD, DSKP, JSU & SPM Alumni</p>
             </div>
         </div>
 
-        <!-- Global Quick Actions -->
         <div class="flex flex-wrap items-center gap-2">
             <button id="btnUndo" onclick="window.undoLastAction()" disabled class="bg-teal-950/80 text-teal-400 opacity-50 cursor-not-allowed text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition font-semibold border border-teal-800">
                 <i class="fa-solid fa-rotate-left"></i> Undo <span id="undoCountBadge" class="hidden bg-amber-500 text-slate-900 rounded-full px-1.5 py-0.2 text-[10px] font-black">0</span>
@@ -121,20 +153,22 @@
             <button id="tab-murid" onclick="window.switchTab('murid')" class="active-subtab text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
                 <i class="fa-solid fa-users"></i> 1. Senarai Murid / Alumni
             </button>
+            <button id="tab-transit" onclick="window.switchTab('transit')" class="text-teal-200 hover:bg-teal-800/60 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-table-cells text-amber-300"></i> 2. Transit PBD Interaktif
+            </button>
             <button id="tab-dskp" onclick="window.switchTab('dskp')" class="text-teal-200 hover:bg-teal-800/60 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-book-open"></i> 2. DSKP Al-Syariah
+                <i class="fa-solid fa-book-open"></i> 3. DSKP Al-Syariah
             </button>
             <button id="tab-jsu" onclick="window.switchTab('jsu')" class="text-teal-200 hover:bg-teal-800/60 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-file-signature"></i> 3. JSU & Format Soalan KBD
+                <i class="fa-solid fa-file-signature"></i> 4. JSU Soalan KBD
             </button>
             <button id="tab-analisis" onclick="window.switchTab('analisis')" class="text-teal-200 hover:bg-teal-800/60 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-chart-pie"></i> 4. Analisis PBD / SPM
+                <i class="fa-solid fa-chart-pie"></i> 5. Analisis PBD / SPM
             </button>
         </div>
     </div>
 </header>
 
-<!-- Main Content Container -->
 <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
 
     <!-- Active Context Banner -->
@@ -154,17 +188,17 @@
         
         <div class="flex items-center gap-3 bg-teal-950/70 px-3 py-2 rounded-xl border border-teal-800/60 text-xs">
             <div>
-                <span id="bannerStatLabel1" class="text-slate-400 text-[10px] block font-semibold">Bil. Murid:</span>
+                <span class="text-slate-400 text-[10px] block font-semibold">Bil. Murid:</span>
                 <strong id="bannerCountMurid" class="text-teal-300 font-extrabold text-sm">0</strong>
             </div>
             <div class="h-6 w-px bg-teal-800"></div>
             <div>
-                <span id="bannerStatLabel2" class="text-slate-400 text-[10px] block font-semibold">Standard DSKP:</span>
+                <span class="text-slate-400 text-[10px] block font-semibold">Standard DSKP:</span>
                 <strong id="bannerCountDskp" class="text-amber-300 font-extrabold text-sm">0 Tajuk</strong>
             </div>
             <div class="h-6 w-px bg-teal-800"></div>
             <div>
-                <span id="bannerStatLabel3" class="text-slate-400 text-[10px] block font-semibold">Instrumen JSU:</span>
+                <span class="text-slate-400 text-[10px] block font-semibold">Instrumen JSU:</span>
                 <strong id="bannerCountJsu" class="text-emerald-300 font-extrabold text-sm">0 Soalan</strong>
             </div>
         </div>
@@ -205,7 +239,48 @@
         </div>
     </section>
 
-    <!-- TAB 2: DSKP AL-SYARIAH KBD -->
+    <!-- TAB 2: TRANSIT PBD INTERAKTIF -->
+    <section id="content-transit" class="space-y-6 hidden">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+            <div>
+                <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-table-cells text-amber-500"></i> Rekod Transit PBD & Penjanaan Status Automatik
+                </h3>
+                <p class="text-xs text-slate-500 mt-0.5">Isikan TP mengikut Standard Pembelajaran (SP). Status "Menguasai / Perlu Intervensi" dijana secara automatik.</p>
+            </div>
+
+            <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 p-1.5 rounded-xl">
+                <span class="text-xs font-bold text-amber-900 px-2"><i class="fa-solid fa-calendar-check"></i> Sesi Pentaksiran:</span>
+                <select id="selectSesiPentaksiran" onchange="window.tukarSesiPentaksiran(this.value)" class="bg-white border border-amber-300 font-extrabold text-amber-900 text-xs rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-amber-500">
+                    <option value="Ujian 1">1. Ujian 1</option>
+                    <option value="Pertengahan Tahun" selected>2. Pentaksiran Pertengahan Tahun</option>
+                    <option value="Akhir Tahun">3. Pentaksiran Akhir Tahun</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto max-h-[600px]">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="sticky top-0 bg-slate-100 z-10 shadow-sm" id="transitTableHeader"></thead>
+                    <tbody id="transitTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+            <div id="transitEmptyState" class="hidden p-8 text-center text-slate-400">
+                <i class="fa-solid fa-folder-open text-4xl mb-2"></i>
+                <p class="font-medium text-xs">Tiada murid dalam kategori ini untuk paparan Transit PBD.</p>
+            </div>
+        </div>
+
+        <div class="bg-rose-50 border border-rose-200 p-5 rounded-2xl">
+            <h4 class="font-black text-rose-900 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+                <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Murid Memerlukan Intervensi / Bimbingan Khas
+            </h4>
+            <div id="intervensiContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
+    </section>
+
+    <!-- TAB 3: DSKP AL-SYARIAH KBD -->
     <section id="content-dskp" class="space-y-6 hidden">
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -239,7 +314,7 @@
         </div>
     </section>
 
-    <!-- TAB 3: JSU & INSTRUMEN SOALAN -->
+    <!-- TAB 4: JSU & INSTRUMEN SOALAN -->
     <section id="content-jsu" class="space-y-6 hidden">
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
@@ -316,14 +391,11 @@
             <div id="jsuEmptyState" class="hidden p-8 text-center text-slate-400">
                 <i class="fa-solid fa-folder-open text-4xl mb-2"></i>
                 <p class="font-medium text-xs">Tiada instrumen JSU direkodkan untuk kategori ini lagi.</p>
-                <button onclick="window.janaPresetJsuFormat()" class="mt-3 bg-indigo-600 text-white text-xs px-4 py-2 rounded-xl font-bold inline-flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Jana Format KBD Standard Sekarang
-                </button>
             </div>
         </div>
     </section>
 
-    <!-- TAB 4: ANALISIS PBD / SPM -->
+    <!-- TAB 5: ANALISIS PBD / SPM -->
     <section id="content-analisis" class="space-y-6 hidden">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-3 border-b border-slate-100 gap-2">
@@ -357,7 +429,6 @@
 
 </main>
 
-<!-- Footer -->
 <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
     <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
         <p>MyClassInsight Platform &copy; 2026 - Hak Cipta Terpelihara Pengurusan PBD, DSKP & SPM KBD Al-Syariah</p>
@@ -366,7 +437,7 @@
 
 <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
 
-<!-- MODAL 1: SAFETY LOCKED NAIK KELAS -->
+<!-- MODAL NAIK KELAS -->
 <div id="modalNaikKelas" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 flex flex-col">
         <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
@@ -380,7 +451,7 @@
         </div>
 
         <div class="py-4 space-y-3 text-xs text-slate-600">
-            <p class="font-medium text-slate-800">Tindakan ini akan memindahkan kelas semua murid secara automatik seperti berikut:</p>
+            <p class="font-medium text-slate-800">Tindakan ini akan memindahkan kelas semua murid secara automatik:</p>
             <ul class="space-y-2 bg-amber-50/80 p-3 rounded-xl border border-amber-200 text-amber-900 font-semibold">
                 <li class="flex items-center gap-2"><i class="fa-solid fa-arrow-right text-amber-600"></i> Murid <strong>3 ARIF</strong> ➔ Naik ke <strong>4 ARIF</strong></li>
                 <li class="flex items-center gap-2"><i class="fa-solid fa-arrow-right text-amber-600"></i> Murid <strong>4 ARIF</strong> ➔ Naik ke <strong>5 ARIF</strong></li>
@@ -389,7 +460,7 @@
             <div class="pt-2">
                 <label class="flex items-start gap-2.5 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200 hover:bg-slate-100 transition">
                     <input type="checkbox" id="chkSahNaikKelas" onchange="window.toggleBtnNaikKelas()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
-                    <span class="text-xs font-bold text-slate-800 leading-tight">Saya faham dan mengesahkan untuk melaksanakan Proses Naik Kelas Sesi Baharu sekarang.</span>
+                    <span class="text-xs font-bold text-slate-800 leading-tight">Saya faham dan mengesahkan untuk melaksanakan Proses Naik Kelas.</span>
                 </label>
             </div>
         </div>
@@ -403,7 +474,7 @@
     </div>
 </div>
 
-<!-- MODAL 2: LOG SEJARAH PERUBAHAN & UNDO -->
+<!-- MODAL SEJARAH LOG -->
 <div id="modalHistory" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[85vh]">
         <div class="flex justify-between items-center pb-3 border-b border-slate-100">
@@ -420,7 +491,7 @@
     </div>
 </div>
 
-<!-- MODAL 3: TAMBAH MURID -->
+<!-- MODAL TAMBAH MURID -->
 <div id="modalTambahMurid" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
         <div class="flex justify-between items-center pb-3 border-b border-slate-100">
@@ -486,173 +557,19 @@
     </div>
 </div>
 
-<!-- MODAL 4: TAMBAH SP DSKP -->
-<div id="modalTambahSp" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                <i class="fa-solid fa-book-medical text-teal-600"></i> Tambah Standard Pembelajaran (SP)
-            </h3>
-            <button onclick="window.closeModalTambahSp()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <form id="formTambahSp" onsubmit="window.simpanSpBaharu(event)" class="space-y-4 my-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Kod SP:</label>
-                <input type="text" id="inputSpKod" required placeholder="Cth: 2.1.1" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Standard Kandungan (SK):</label>
-                <input type="text" id="inputSpSk" required placeholder="Cth: صوم رمضان" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Standard Pembelajaran (SP):</label>
-                <textarea id="inputSpSp" required rows="3" placeholder="Cth: ذكر تعريف صوم رمضان" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none"></textarea>
-            </div>
-            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
-                <button type="button" onclick="window.closeModalTambahSp()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">Batal</button>
-                <button type="submit" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-check"></i> Simpan SP
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- MODAL 5: TAMBAH INSTRUMEN JSU -->
-<div id="modalTambahJsu" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                <i class="fa-solid fa-file-circle-plus text-indigo-600"></i> Tambah Soalan JSU
-            </h3>
-            <button onclick="window.closeModalTambahJsu()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <form id="formTambahJsu" onsubmit="window.simpanJsuBaharu(event)" class="space-y-3 my-3">
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Bahagian (قسم):</label>
-                    <select id="inputJsuBahagian" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
-                        <option value="A">Bahagian A (قسم أ)</option>
-                        <option value="B" selected>Bahagian B (قسم ب)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">No. Soalan:</label>
-                    <input type="text" id="inputJsuNo" required placeholder="Cth: Soalan 1(a)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Bidang / Subjek:</label>
-                    <input type="text" id="inputJsuBidang" required placeholder="Cth: Fiqh Ibadah" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Markah:</label>
-                    <input type="number" id="inputJsuMarkah" required min="1" max="100" value="10" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Topik / Tajuk JSU:</label>
-                <input type="text" id="inputJsuTopik" required placeholder="Cth: صوم رمضان" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Konstrukt:</label>
-                    <select id="inputJsuKonstrukt" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
-                        <option value="Mengingat">Mengingat</option>
-                        <option value="Memahami" selected>Memahami</option>
-                        <option value="Mengaplikasi">Mengaplikasi</option>
-                        <option value="Menganalisis">Menganalisis</option>
-                        <option value="Menilai">Menilai</option>
-                        <option value="Mencipta">Mencipta</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Aras Kesukaran:</label>
-                    <select id="inputJsuAras" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
-                        <option value="Rendah">Rendah (R)</option>
-                        <option value="Sederhana" selected>Sederhana (S)</option>
-                        <option value="Tinggi">Tinggi (T)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Pautan Fail Soalan / Drive (Pilihan):</label>
-                <input type="url" id="inputJsuLink" placeholder="https://drive.google.com/..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
-            </div>
-
-            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
-                <button type="button" onclick="window.closeModalTambahJsu()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">Batal</button>
-                <button type="submit" class="bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-check"></i> Simpan Soalan JSU
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- MODAL 6: CETAK MATRIX JSU -->
-<div id="modalJsuFull" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div id="printableJsuModal" class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[90vh]">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-100 no-print">
-            <h3 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
-                <i class="fa-solid fa-print text-teal-600"></i> Cetak Jadual Spesifikasi Ujian (JSU)
-            </h3>
-            <button onclick="window.tutupModalJsuFull()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <div class="my-4 overflow-y-auto flex-1">
-            <div class="text-center mb-6 border-b pb-4">
-                <h2 id="jsuMatrixTitle" class="text-lg font-black uppercase tracking-tight text-slate-900">JADUAL SPESIFIKASI UJIAN (JSU) AL-SYARIAH KBD</h2>
-                <p class="text-xs text-slate-500">Kementerian Pendidikan Malaysia - Kurikulum Bersepadu Dini (KBD)</p>
-            </div>
-
-            <table class="w-full text-left text-xs border border-slate-300 border-collapse">
-                <thead>
-                    <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
-                        <th class="border border-slate-300 px-3 py-2 w-20">Bahagian</th>
-                        <th class="border border-slate-300 px-3 py-2 w-20">No. Soalan</th>
-                        <th class="border border-slate-300 px-3 py-2">Bidang & Topik JSU</th>
-                        <th class="border border-slate-300 px-3 py-2 w-16 text-center">Markah</th>
-                        <th class="border border-slate-300 px-3 py-2 w-24">Konstrukt</th>
-                        <th class="border border-slate-300 px-3 py-2 w-20 text-center">Aras</th>
-                    </tr>
-                </thead>
-                <tbody id="jsuMatrixTableBody"></tbody>
-            </table>
-        </div>
-
-        <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 no-print">
-            <button onclick="window.tutupModalJsuFull()" class="bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Tutup</button>
-            <button onclick="window.printJsuMatrix()" class="bg-teal-700 hover:bg-teal-800 text-white font-bold px-5 py-2 rounded-xl text-xs shadow flex items-center gap-1.5 cursor-pointer">
-                <i class="fa-solid fa-print"></i> Cetak Sekarang
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- LOGIK SKRIP SKRIN UTAMA -->
+<!-- LOGIK SKRIP UTAMA -->
 <script>
-// Tangkap Sebarang Ralat Latar Belakang & Papar Pada Skrin
 window.onerror = function(msg, url, line) {
     const errDiv = document.getElementById('globalErrorDisplay');
     if (errDiv) {
         errDiv.classList.remove('hidden');
-        errDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Ralat Larian JavaScript Detected: ${msg} (Baris: ${line})`;
+        errDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Ralat Larian: ${msg} (Baris: ${line})`;
     }
     return false;
 };
 
-// Kunci Storan V3
-const STORAGE_KEY = 'myClassInsightData_v3';
+const STORAGE_KEY = 'myClassInsightData_v41';
 
-// Data Asal 31 Murid
 const defaultMuridList = [
     // 3 ARIF (14 Murid)
     { id: '3-01', nama: 'ABDUL QAIYUM BIN HANAFIZULLAH', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
@@ -692,7 +609,6 @@ const defaultMuridList = [
     { id: '5-07', nama: 'QAMIEYL IYQRAM ASZRIN BIN ABDULLAH', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' }
 ];
 
-// Data DSKP 3 ARIF
 const defaultDskpTingkatan3 = [
     {"kod": "1.1", "sk": "Hukum Tajwid", "sp": "Mad Far'i (Mad Silah, Mad Badal, Mad Tamkin, Mad Farq)"},
     {"kod": "1.2", "sk": "Ayat Hafazan", "sp": "Surah Al-Baqarah (Ayat 255 - Ayat Kursi)"},
@@ -713,6 +629,7 @@ function createFreshState() {
     return {
         currentTingkatan: "3 ARIF",
         currentTab: "murid",
+        currentSesiPentaksiran: "Pertengahan Tahun",
         muridList: JSON.parse(JSON.stringify(defaultMuridList)),
         dskpList: {
             "3 ARIF": JSON.parse(JSON.stringify(defaultDskpTingkatan3)),
@@ -720,6 +637,7 @@ function createFreshState() {
             "5 ARIF": []
         },
         jsuList: { "3 ARIF": [], "4 ARIF": [], "5 ARIF": [] },
+        transitPbd: {},
         historyStack: []
     };
 }
@@ -729,7 +647,7 @@ try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
         appState = JSON.parse(saved);
-        if (!appState || !appState.muridList || appState.muridList.length < 31) {
+        if (!appState || !appState.muridList || appState.muridList.length < 31 || !appState.transitPbd) {
             appState = createFreshState();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
         }
@@ -747,7 +665,7 @@ function saveState(actionMsg = "") {
         appState.historyStack.push({
             time: new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' }),
             msg: actionMsg,
-            data: JSON.parse(JSON.stringify({ muridList: appState.muridList, dskpList: appState.dskpList, jsuList: appState.jsuList }))
+            data: JSON.parse(JSON.stringify({ muridList: appState.muridList, dskpList: appState.dskpList, jsuList: appState.jsuList, transitPbd: appState.transitPbd }))
         });
         if (appState.historyStack.length > 15) appState.historyStack.shift();
     }
@@ -781,6 +699,7 @@ window.undoLastAction = function() {
     appState.muridList = lastSnap.data.muridList;
     appState.dskpList = lastSnap.data.dskpList;
     appState.jsuList = lastSnap.data.jsuList;
+    appState.transitPbd = lastSnap.data.transitPbd || {};
     
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
     showToast(`Undo Berjaya: ${lastSnap.msg}`, 'info');
@@ -800,7 +719,7 @@ window.setTingkatanContext = function(ting) {
 
 window.switchTab = function(tab) {
     appState.currentTab = tab;
-    ['murid', 'dskp', 'jsu', 'analisis'].forEach(t => {
+    ['murid', 'transit', 'dskp', 'jsu', 'analisis'].forEach(t => {
         const sec = document.getElementById(`content-${t}`);
         const btn = document.getElementById(`tab-${t}`);
         if (sec) sec.classList.toggle('hidden', t !== tab);
@@ -809,6 +728,12 @@ window.switchTab = function(tab) {
             btn.classList.toggle('text-teal-200', t !== tab);
         }
     });
+    renderAll();
+};
+
+window.tukarSesiPentaksiran = function(sesi) {
+    appState.currentSesiPentaksiran = sesi;
+    saveState(`Tukar Sesi Pentaksiran: ${sesi}`);
     renderAll();
 };
 
@@ -846,6 +771,147 @@ function renderBanner() {
     const jsuEl = document.getElementById('bannerCountJsu');
     if (jsuEl) jsuEl.innerText = `${jsuCount} Soalan`;
 }
+
+window.kemaskiniTpTransit = function(muridId, kodSp, val) {
+    const sesi = appState.currentSesiPentaksiran || "Pertengahan Tahun";
+    if (!appState.transitPbd) appState.transitPbd = {};
+    if (!appState.transitPbd[muridId]) appState.transitPbd[muridId] = {};
+    if (!appState.transitPbd[muridId][sesi]) appState.transitPbd[muridId][sesi] = {};
+
+    appState.transitPbd[muridId][sesi][kodSp] = parseInt(val);
+
+    const murid = appState.muridList.find(m => String(m.id) === String(muridId));
+    if (murid) {
+        const rekod = appState.transitPbd[muridId][sesi];
+        const arrVals = Object.values(rekod);
+        if (arrVals.length > 0) {
+            const avg = Math.round(arrVals.reduce((a, b) => a + b, 0) / arrVals.length);
+            murid.tp = avg;
+        }
+    }
+
+    saveState(`Kemaskini Transit PBD (${kodSp})`);
+    renderAll();
+};
+
+window.renderTransitTable = function() {
+    const ting = appState.currentTingkatan;
+    const sesi = appState.currentSesiPentaksiran || "Pertengahan Tahun";
+    const thead = document.getElementById('transitTableHeader');
+    const tbody = document.getElementById('transitTableBody');
+    const empty = document.getElementById('transitEmptyState');
+    const intervensiDiv = document.getElementById('intervensiContainer');
+
+    if (!thead || !tbody || !empty) return;
+
+    const filteredMurid = (appState.muridList || []).filter(m => (ting === 'SEMUA' || m.kelas === ting) && m.kelas !== 'ALUMNI');
+    
+    let dskpItems = [];
+    if (ting === 'SEMUA') {
+        Object.values(appState.dskpList || {}).forEach(arr => dskpItems.push(...(arr || [])));
+    } else if (appState.dskpList?.[ting]) {
+        dskpItems = appState.dskpList[ting];
+    }
+
+    if (filteredMurid.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        if (intervensiDiv) intervensiDiv.innerHTML = `<p class="text-xs text-rose-700 italic">Tiada murid untuk dianalisis bagi kategori ini.</p>`;
+        return;
+    }
+    empty.classList.add('hidden');
+
+    let headerHTML = `
+        <tr class="bg-slate-200 text-slate-700 font-extrabold uppercase text-[11px] tracking-wider border-b border-slate-300">
+            <th class="px-3 py-3 w-10 text-center sticky left-0 bg-slate-200 z-20">Bil</th>
+            <th class="px-4 py-3 min-w-[200px] sticky left-10 bg-slate-200 z-20 shadow-r">Nama Murid</th>
+            <th class="px-3 py-3 w-28 text-center bg-amber-100 text-amber-900 border-x border-amber-300">TP Keseluruhan</th>
+            <th class="px-3 py-3 w-32 text-center bg-teal-100 text-teal-900 border-r border-teal-300">Status Automatik</th>`;
+    
+    if (dskpItems.length > 0) {
+        dskpItems.forEach(sp => {
+            headerHTML += `<th class="px-3 py-3 text-center min-w-[90px] border-r border-slate-300" title="${sp.sk} - ${sp.sp}">Kod ${sp.kod}</th>`;
+        });
+    } else {
+        headerHTML += `<th class="px-4 py-3 text-center text-slate-400 italic">DSKP Belum Dimasukkan</th>`;
+    }
+    headerHTML += `</tr>`;
+    thead.innerHTML = headerHTML;
+
+    let intervensiMuridList = [];
+
+    tbody.innerHTML = filteredMurid.map((m, idx) => {
+        const userTransit = appState.transitPbd?.[m.id]?.[sesi] || {};
+        const userTpList = dskpItems.map(sp => userTransit[sp.kod]).filter(val => val !== undefined && val !== null);
+        
+        let tpAuto = m.tp || 3;
+        let gagalSpList = [];
+
+        dskpItems.forEach(sp => {
+            const val = userTransit[sp.kod];
+            if (val === 1 || val === 2) {
+                gagalSpList.push(sp.kod);
+            }
+        });
+
+        if (userTpList.length > 0) {
+            tpAuto = Math.round(userTpList.reduce((a, b) => a + b, 0) / userTpList.length);
+        }
+
+        const statusLabel = (tpAuto >= 3 && gagalSpList.length === 0) 
+            ? `<span class="bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-lg text-[10px]">MENGUASAI</span>`
+            : `<span class="bg-rose-100 text-rose-800 font-extrabold px-2.5 py-1 rounded-lg text-[10px] animate-pulse">PERLU INTERVENSI</span>`;
+
+        if (tpAuto < 3 || gagalSpList.length > 0) {
+            intervensiMuridList.push({ nama: m.nama, kelas: m.kelas, tp: tpAuto, tajukKritikal: gagalSpList });
+        }
+
+        return `
+            <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                <td class="px-3 py-2.5 text-center font-bold text-slate-400 sticky left-0 bg-white z-10">${idx + 1}</td>
+                <td class="px-4 py-2.5 font-bold text-slate-800 sticky left-10 bg-white z-10 shadow-r">${m.nama}</td>
+                <td class="px-3 py-2.5 text-center font-black text-amber-900 bg-amber-50/50 border-x border-amber-200 text-sm">${tpAuto}</td>
+                <td class="px-3 py-2.5 text-center border-r border-teal-200">${statusLabel}</td>
+                ${dskpItems.length > 0 ? dskpItems.map(sp => {
+                    const currentVal = userTransit[sp.kod] || "";
+                    return `
+                        <td class="px-2 py-2 text-center border-r border-slate-200">
+                            <select onchange="window.kemaskiniTpTransit('${m.id}', '${sp.kod}', this.value)" class="w-full bg-slate-50 border border-slate-300 rounded px-1.5 py-1 font-extrabold text-xs text-center focus:ring-2 focus:ring-amber-500">
+                                <option value="" ${currentVal === "" ? 'selected' : ''}>-</option>
+                                ${[1, 2, 3, 4, 5, 6].map(tp => `<option value="${tp}" ${currentVal == tp ? 'selected' : ''} class="${tp <= 2 ? 'text-rose-600 font-bold' : ''}">TP ${tp}</option>`).join('')}
+                            </select>
+                        </td>`;
+                }).join('') : `<td class="px-4 py-2 text-center text-slate-400 italic">Sila tambah SP di Tab DSKP</td>`}
+            </tr>`;
+    }).join('');
+
+    if (intervensiDiv) {
+        if (intervensiMuridList.length === 0) {
+            intervensiDiv.innerHTML = `<p class="text-xs font-bold text-emerald-700 bg-emerald-50 p-3 rounded-xl border border-emerald-200"><i class="fa-solid fa-circle-check"></i> Syabas! Semua murid mencapai tahap penguasaan minimum bagi sesi ${sesi}.</p>`;
+        } else {
+            intervensiDiv.innerHTML = intervensiMuridList.map(item => `
+                <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center">
+                            <strong class="text-xs text-slate-800 uppercase font-black">${item.nama}</strong>
+                            <span class="bg-rose-100 text-rose-800 font-black text-[10px] px-2 py-0.5 rounded">${item.kelas}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1">Purata TP: <strong class="text-rose-600">TP ${item.tp}</strong></p>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-100">
+                        <span class="text-[10px] text-rose-700 font-bold block">Tajuk Kritikal (TP1/TP2):</span>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${item.tajukKritikal.length > 0 
+                                ? item.tajukKritikal.map(k => `<span class="bg-rose-600 text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded">SP ${k}</span>`).join('')
+                                : `<span class="text-[10px] text-slate-400">Purata Keseluruhan < TP3</span>`
+                            }
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+};
 
 window.renderMuridTable = function() {
     const ting = appState.currentTingkatan;
@@ -1031,13 +1097,9 @@ window.renderAnalisis = function() {
         const gpmp = (total > 0) ? (totalGpaPoints / total).toFixed(2) : "0.00";
         const pctLulus = (total > 0) ? ((lulusCount / total) * 100).toFixed(1) : "0";
 
-        const gpmpEl = document.getElementById('statGpmp');
-        const lulusEl = document.getElementById('statLulus');
-        const cemEl = document.getElementById('statCemerlang');
-
-        if (gpmpEl) gpmpEl.innerText = gpmp;
-        if (lulusEl) lulusEl.innerText = `${pctLulus}%`;
-        if (cemEl) cemEl.innerText = `${cemerlangCount} Orang`;
+        document.getElementById('statGpmp').innerText = gpmp;
+        document.getElementById('statLulus').innerText = `${pctLulus}%`;
+        document.getElementById('statCemerlang').innerText = `${cemerlangCount} Orang`;
 
         container.innerHTML = `
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
@@ -1081,19 +1143,15 @@ window.renderAnalisis = function() {
 function renderAll() {
     renderBanner();
     window.renderMuridTable();
+    window.renderTransitTable();
     window.renderDskpTable();
     window.renderJsuTable();
     window.renderAnalisis();
     updateUndoButtonUI();
 }
 
-// Operasi Murid
-window.openModalTambahMurid = function() {
-    document.getElementById('modalTambahMurid')?.classList.remove('hidden');
-};
-window.closeModalTambahMurid = function() {
-    document.getElementById('modalTambahMurid')?.classList.add('hidden');
-};
+window.openModalTambahMurid = function() { document.getElementById('modalTambahMurid')?.classList.remove('hidden'); };
+window.closeModalTambahMurid = function() { document.getElementById('modalTambahMurid')?.classList.add('hidden'); };
 window.toggleInputsTambahMurid = function() {
     const k = document.getElementById('inputKelas')?.value;
     document.getElementById('containerInputTp')?.classList.toggle('hidden', k === 'ALUMNI');
@@ -1140,184 +1198,6 @@ window.padamMurid = function(id) {
     }
 };
 
-// Operasi DSKP
-window.openModalTambahSp = function() {
-    document.getElementById('modalTambahSp')?.classList.remove('hidden');
-};
-window.closeModalTambahSp = function() {
-    document.getElementById('modalTambahSp')?.classList.add('hidden');
-};
-window.simpanSpBaharu = function(e) {
-    e.preventDefault();
-    const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
-    const kod = document.getElementById('inputSpKod')?.value.trim();
-    const sk = document.getElementById('inputSpSk')?.value.trim();
-    const sp = document.getElementById('inputSpSp')?.value.trim();
-
-    if (!appState.dskpList[ting]) appState.dskpList[ting] = [];
-    appState.dskpList[ting].push({ kod, sk, sp });
-
-    saveState(`Tambah SP DSKP ${kod} (${ting})`);
-    window.closeModalTambahSp();
-    showToast("Standard Pembelajaran berjaya ditambah", "success");
-    renderAll();
-};
-window.padamDskpItem = function(ting, idx) {
-    const t = ting === 'SEMUA' ? '3 ARIF' : ting;
-    if (appState.dskpList[t] && confirm("Padam tajuk DSKP ini?")) {
-        appState.dskpList[t].splice(idx, 1);
-        saveState(`Padam SP DSKP (${t})`);
-        renderAll();
-    }
-};
-
-// Operasi JSU
-window.openModalTambahJsu = function() {
-    document.getElementById('modalTambahJsu')?.classList.remove('hidden');
-};
-window.closeModalTambahJsu = function() {
-    document.getElementById('modalTambahJsu')?.classList.add('hidden');
-};
-window.simpanJsuBaharu = function(e) {
-    e.preventDefault();
-    const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
-    const bahagian = document.getElementById('inputJsuBahagian')?.value;
-    const no = document.getElementById('inputJsuNo')?.value.trim();
-    const bidang = document.getElementById('inputJsuBidang')?.value.trim();
-    const topik = document.getElementById('inputJsuTopik')?.value.trim();
-    const markah = parseInt(document.getElementById('inputJsuMarkah')?.value || "10");
-    const konstrukt = document.getElementById('inputJsuKonstrukt')?.value;
-    const aras = document.getElementById('inputJsuAras')?.value;
-    const link = document.getElementById('inputJsuLink')?.value.trim();
-
-    if (!appState.jsuList[ting]) appState.jsuList[ting] = [];
-    appState.jsuList[ting].push({ bahagian, no, bidang, topik, markah, konstrukt, aras, link });
-
-    saveState(`Tambah Soalan JSU ${no} (${ting})`);
-    window.closeModalTambahJsu();
-    showToast("Soalan JSU berjaya disimpan", "success");
-    renderAll();
-};
-window.padamJsuItem = function(ting, idx) {
-    const t = ting === 'SEMUA' ? '3 ARIF' : ting;
-    if (appState.jsuList[t] && confirm("Padam soalan JSU ini?")) {
-        appState.jsuList[t].splice(idx, 1);
-        saveState(`Padam Soalan JSU (${t})`);
-        renderAll();
-    }
-};
-window.janaPresetJsuFormat = function() {
-    const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
-    const preset = [
-        { bahagian: "A", no: "1(a)", bidang: "Al-Quran & Tajwid", topik: "Hukum Tajwid Mad Far'i", markah: 5, konstrukt: "Mengingat", aras: "Rendah", link: "" },
-        { bahagian: "A", no: "1(b)", bidang: "Al-Quran & Hafazan", topik: "Ayat Hafazan Surah Al-Baqarah", markah: 5, konstrukt: "Mengingat", aras: "Rendah", link: "" },
-        { bahagian: "A", no: "2(a)", bidang: "Ayat Kefahaman", topik: "Hidayah Allah SWT Pemangkin Kesejahteraan", markah: 5, konstrukt: "Memahami", aras: "Sederhana", link: "" },
-        { bahagian: "A", no: "2(b)", bidang: "Ayat Kefahaman", topik: "Menjauhi Kemungkaran", markah: 5, konstrukt: "Mengaplikasi", aras: "Tinggi", link: "" },
-        { bahagian: "B", no: "3(a)", bidang: "Fiqh Ibadah", topik: "صوم رمضان - شروط وأركان", markah: 10, konstrukt: "Memahami", aras: "Sederhana", link: "" },
-        { bahagian: "B", no: "3(b)", bidang: "Fiqh Ibadah", topik: "صلاة الجمع والقصر", markah: 10, konstrukt: "Mengaplikasi", aras: "Sederhana", link: "" },
-        { bahagian: "B", no: "4(a)", bidang: "Fiqh Munakahat", topik: "الأسرة في الإسلام والخطبة", markah: 10, konstrukt: "Memahami", aras: "Sederhana", link: "" },
-        { bahagian: "B", no: "4(b)", bidang: "Fiqh Munakahat", topik: "النكاح والحقوق الزوجية", markah: 10, konstrukt: "Menganalisis", aras: "Tinggi", link: "" },
-        { bahagian: "B", no: "5(a)", bidang: "Fiqh Muamalat", topik: "المعاملات والربا", markah: 10, konstrukt: "Memahami", aras: "Sederhana", link: "" },
-        { bahagian: "B", no: "5(b)", bidang: "Fiqh Muamalat", topik: "الغرر والتدليس والمقامرة", markah: 10, konstrukt: "Menilai", aras: "Tinggi", link: "" }
-    ];
-
-    appState.jsuList[ting] = preset;
-    saveState(`Jana Preset JSU Format (${ting})`);
-    showToast(`Format Standard KBD berjaya dijana untuk ${ting}!`, "success");
-    renderAll();
-};
-window.paparModalJsuFull = function() {
-    const ting = appState.currentTingkatan === 'SEMUA' ? '3 ARIF' : appState.currentTingkatan;
-    const titleEl = document.getElementById('jsuMatrixTitle');
-    if (titleEl) titleEl.innerText = `JADUAL SPESIFIKASI UJIAN (JSU) AL-SYARIAH - ${ting}`;
-    
-    const items = appState.jsuList[ting] || [];
-    const tbody = document.getElementById('jsuMatrixTableBody');
-
-    if (tbody) {
-        if (items.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">Tiada soalan JSU untuk dicetak bagi ${ting}.</td></tr>`;
-        } else {
-            tbody.innerHTML = items.map(item => `
-                <tr>
-                    <td class="border border-slate-300 px-3 py-2 font-bold">Bahagian ${item.bahagian}</td>
-                    <td class="border border-slate-300 px-3 py-2 font-mono font-bold">${item.no}</td>
-                    <td class="border border-slate-300 px-3 py-2"><strong>${item.bidang}:</strong> ${item.topik}</td>
-                    <td class="border border-slate-300 px-3 py-2 text-center font-bold">${item.markah}</td>
-                    <td class="border border-slate-300 px-3 py-2">${item.konstrukt}</td>
-                    <td class="border border-slate-300 px-3 py-2 text-center">${item.aras}</td>
-                </tr>
-            `).join('');
-        }
-    }
-    document.getElementById('modalJsuFull')?.classList.remove('hidden');
-};
-window.tutupModalJsuFull = function() {
-    document.getElementById('modalJsuFull')?.classList.add('hidden');
-};
-window.printJsuMatrix = function() {
-    window.print();
-};
-
-// Naik Kelas & History Modals
-window.bukaModalNaikKelas = function() {
-    const chk = document.getElementById('chkSahNaikKelas');
-    if (chk) chk.checked = false;
-    window.toggleBtnNaikKelas();
-    document.getElementById('modalNaikKelas')?.classList.remove('hidden');
-};
-window.tutupModalNaikKelas = function() {
-    document.getElementById('modalNaikKelas')?.classList.add('hidden');
-};
-window.toggleBtnNaikKelas = function() {
-    const chk = document.getElementById('chkSahNaikKelas')?.checked;
-    const btn = document.getElementById('btnLaksanaNaikKelas');
-    if (!btn) return;
-    btn.disabled = !chk;
-    if (chk) {
-        btn.classList.remove('opacity-50', 'cursor-not-allowed');
-        btn.classList.add('hover:bg-amber-500', 'cursor-pointer');
-    } else {
-        btn.classList.add('opacity-50', 'cursor-not-allowed');
-        btn.classList.remove('hover:bg-amber-500', 'cursor-pointer');
-    }
-};
-window.sahDanLaksanaNaikKelas = function() {
-    appState.muridList.forEach(m => {
-        if (m.kelas === '3 ARIF') m.kelas = '4 ARIF';
-        else if (m.kelas === '4 ARIF') m.kelas = '5 ARIF';
-        else if (m.kelas === '5 ARIF') { m.kelas = 'ALUMNI'; m.gredSpm = ""; }
-    });
-
-    saveState("Proses Naik Kelas Sesi Baharu");
-    window.tutupModalNaikKelas();
-    showToast("Proses Naik Kelas Berjaya Dilaksanakan!", "success");
-    renderAll();
-};
-window.openHistoryModal = function() {
-    const container = document.getElementById('historyListContainer');
-    const stack = appState.historyStack || [];
-    if (container) {
-        if (stack.length === 0) {
-            container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Tiada sejarah perubahan direkodkan lagi.</p>`;
-        } else {
-            container.innerHTML = stack.slice().reverse().map(item => `
-                <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs flex justify-between items-center">
-                    <div>
-                        <span class="font-bold text-slate-800">${item.msg}</span>
-                        <span class="block text-[10px] text-slate-400">${item.time}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-    }
-    document.getElementById('modalHistory')?.classList.remove('hidden');
-};
-window.closeHistoryModal = function() {
-    document.getElementById('modalHistory')?.classList.add('hidden');
-};
-
-// Data Backup & Reset
 window.exportData = function() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
     const dlAnchor = document.createElement('a');
@@ -1369,7 +1249,6 @@ function showToast(msg, type = "info") {
     setTimeout(() => toast.remove(), 3000);
 }
 
-// Boot Larian Utama
 document.addEventListener('DOMContentLoaded', () => {
     window.setTingkatanContext(appState.currentTingkatan || '3 ARIF');
 });
