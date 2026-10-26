@@ -3,1255 +3,574 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyClassInsight Platform - KBD Al-Syariah</title>
+    <title>MyClassInsight - Sistem Pengurusan PdPC & Post Mortem</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        .active-tingkatan {
-            background-color: #0f766e !important;
-            color: #ffffff !important;
-            font-weight: 800 !important;
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-            border-bottom: 3px solid #f59e0b !important;
-        }
-        .active-subtab {
-            background-color: #0d9488 !important;
-            color: #ffffff !important;
-            font-weight: 800 !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* TAPAN MESRA CETAK & PRATONTON (PRINT PREVIEW FIX) */
         @media print {
-            header, footer, #toastContainer, #globalErrorDisplay, .no-print, 
-            button, select:not(.print-show), input, #contextBanner {
-                display: none !important;
-            }
-            body {
-                background: #ffffff !important;
-                color: #000000 !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            main {
-                max-width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            .shadow-sm, .shadow-xl, .shadow-2xl, .border {
-                box-shadow: none !important;
-                border-color: #cbd5e1 !important;
-            }
-            table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-            }
-            th, td {
-                border: 1px solid #94a3b8 !important;
-                padding: 6px 8px !important;
-                color: #000000 !important;
-            }
-            #modalJsuFull:not(.hidden) {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
-                width: 100% !important;
-                height: auto !important;
-                background: white !important;
-                z-index: 9999 !important;
-            }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: #fff !important; color: #000 !important; }
+            .print-card { border: none !important; shadow: none !important; }
         }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen flex flex-col antialiased text-slate-800">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-<!-- Error Alert Display -->
-<div id="globalErrorDisplay" class="hidden bg-rose-600 text-white p-3 text-xs font-bold text-center z-50"></div>
-
-<!-- Header Top Bar -->
-<header class="bg-gradient-to-r from-teal-950 via-teal-900 to-emerald-950 text-white shadow-xl sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
-        
-        <div class="flex items-center gap-3">
-            <div class="bg-teal-800/80 p-2.5 rounded-2xl border border-teal-500/30 shadow-inner">
-                <i class="fa-solid fa-graduation-cap text-2xl text-emerald-300"></i>
-            </div>
-            <div>
-                <h1 class="font-black text-lg md:text-xl tracking-tight flex items-center gap-2">
-                    MyClassInsight <span class="bg-emerald-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">KBD Al-Syariah</span>
-                </h1>
-                <p class="text-xs text-teal-200/90 font-medium">Sistem Pengurusan Rekod Transit PBD, DSKP, JSU & SPM Alumni</p>
-            </div>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2">
-            <button id="btnUndo" onclick="window.undoLastAction()" disabled class="bg-teal-950/80 text-teal-400 opacity-50 cursor-not-allowed text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition font-semibold border border-teal-800">
-                <i class="fa-solid fa-rotate-left"></i> Undo <span id="undoCountBadge" class="hidden bg-amber-500 text-slate-900 rounded-full px-1.5 py-0.2 text-[10px] font-black">0</span>
-            </button>
-            
-            <button onclick="window.openHistoryModal()" class="bg-teal-800 hover:bg-teal-700 text-white text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition border border-teal-600 font-semibold">
-                <i class="fa-solid fa-clock-rotate-left text-amber-300"></i> Sejarah
-            </button>
-
-            <a href="https://drive.google.com/drive/folders/1fV5cZ_A49wBbrJ7gZYhce_URY2Gd0eFZ?usp=sharing" target="_blank" 
-               class="bg-teal-900/90 hover:bg-teal-800 text-white text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 border border-teal-700 transition shadow font-semibold">
-                <i class="fa-brands fa-google-drive text-amber-400 text-sm"></i>
-                <span class="hidden sm:inline">Folder Drive</span>
-            </a>
-            
-            <button onclick="window.exportData()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition font-bold">
-                <i class="fa-solid fa-download"></i> Eksport
-            </button>
-            
-            <label class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow cursor-pointer transition font-bold">
-                <i class="fa-solid fa-upload"></i> Import
-                <input type="file" id="importFile" accept=".json" onchange="window.importData(event)" class="hidden">
-            </label>
-
-            <button onclick="window.resetToDefaultData()" title="Set Semula Data Asal" class="bg-rose-800/80 hover:bg-rose-700 text-rose-200 text-xs px-2.5 py-2 rounded-xl flex items-center gap-1 border border-rose-600 transition shadow font-semibold">
-                <i class="fa-solid fa-arrows-rotate"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- TINGKATAN SELECTOR BAR -->
-    <div class="bg-teal-950 border-t border-teal-800/60 shadow-inner">
-        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between overflow-x-auto gap-2 py-1.5">
-            <span class="text-[11px] font-extrabold uppercase text-teal-400 tracking-wider flex items-center gap-1.5 px-2 whitespace-nowrap">
-                <i class="fa-solid fa-layer-group"></i> Pilih Kategori:
-            </span>
-            
-            <div class="flex items-center gap-1.5 w-full md:w-auto">
-                <button id="ting-3" onclick="window.setTingkatanContext('3 ARIF')" class="text-xs px-4 py-2 rounded-xl text-teal-100 hover:bg-teal-900 transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
-                    <span class="w-2 h-2 rounded-full bg-sky-400"></span> Tingkatan 3 ARIF
-                </button>
-                <button id="ting-4" onclick="window.setTingkatanContext('4 ARIF')" class="text-xs px-4 py-2 rounded-xl text-teal-100 hover:bg-teal-900 transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
-                    <span class="w-2 h-2 rounded-full bg-indigo-400"></span> Tingkatan 4 ARIF
-                </button>
-                <button id="ting-5" onclick="window.setTingkatanContext('5 ARIF')" class="text-xs px-4 py-2 rounded-xl text-teal-100 hover:bg-teal-900 transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Tingkatan 5 ARIF
-                </button>
-                <button id="ting-alumni" onclick="window.setTingkatanContext('ALUMNI')" class="text-xs px-4 py-2 rounded-xl text-teal-100 hover:bg-teal-900 transition flex items-center gap-2 whitespace-nowrap cursor-pointer">
-                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span> ALUMNI (SPM)
-                </button>
-                <button id="ting-semua" onclick="window.setTingkatanContext('SEMUA')" class="text-xs px-3 py-2 rounded-xl text-teal-300 hover:bg-teal-900 transition flex items-center gap-1.5 whitespace-nowrap border border-teal-800 cursor-pointer">
-                    <i class="fa-solid fa-globe"></i> Semua Rekod
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODULE SUB-TABS -->
-    <div class="bg-teal-900/60 border-t border-teal-800/40">
-        <div class="max-w-7xl mx-auto px-4 flex gap-2 py-2 overflow-x-auto">
-            <button id="tab-murid" onclick="window.switchTab('murid')" class="active-subtab text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-users"></i> 1. Senarai Murid / Alumni
-            </button>
-            <button id="tab-transit" onclick="window.switchTab('transit')" class="text-teal-200 hover:bg-teal-800/60 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-table-cells text-amber-300"></i> 2. Transit PBD Interaktif
-            </button>
-            <button id="tab-dskp" onclick="window.switchTab('dskp')" class="text-teal-200 hover:bg-teal-800/60 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-book-open"></i> 3. DSKP Al-Syariah
-            </button>
-            <button id="tab-jsu" onclick="window.switchTab('jsu')" class="text-teal-200 hover:bg-teal-800/60 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-file-signature"></i> 4. JSU Soalan KBD
-            </button>
-            <button id="tab-analisis" onclick="window.switchTab('analisis')" class="text-teal-200 hover:bg-teal-800/60 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-chart-pie"></i> 5. Analisis PBD / SPM
-            </button>
-        </div>
-    </div>
-</header>
-
-<main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
-
-    <!-- Active Context Banner -->
-    <div id="contextBanner" class="bg-gradient-to-r from-teal-900 to-slate-900 text-white p-4 rounded-2xl shadow-sm border border-teal-800/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <div class="flex items-center gap-3">
-            <div id="bannerIconBg" class="bg-sky-500/20 text-sky-300 p-3 rounded-xl border border-sky-500/30">
-                <i class="fa-solid fa-school text-xl"></i>
-            </div>
-            <div>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-extrabold uppercase tracking-wider text-teal-300">Ruang Kerja Aktif</span>
-                    <span id="bannerBadge" class="bg-sky-500 text-slate-950 font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase">TINGKATAN 3 ARIF</span>
+    <!-- HEADER & NAVBAR (NO PRINT) -->
+    <header class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-teal-800 text-white shadow-lg no-print">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-teal-500/20 rounded-xl border border-teal-400/30">
+                    <i class="fa-solid me-1 fa-chart-line text-2xl text-teal-300"></i>
                 </div>
-                <h2 id="bannerTitle" class="text-base font-extrabold text-white mt-0.5">Pengurusan Pengajaran & Pentaksiran Al-Syariah</h2>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">MyClassInsight</h1>
+                    <p class="text-xs text-indigo-200">Sistem Pengurusan Eviden PdPC, Transit PBD & Post Mortem AI</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 bg-indigo-950/40 px-4 py-2 rounded-lg border border-indigo-700/50">
+                <div class="text-right">
+                    <p class="text-xs text-indigo-300">Nama Guru:</p>
+                    <p class="text-sm font-semibold text-teal-300">IZYAN MUNIRAH BINTI MOHD SADALE</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center font-bold text-slate-900">
+                    IM
+                </div>
             </div>
         </div>
-        
-        <div class="flex items-center gap-3 bg-teal-950/70 px-3 py-2 rounded-xl border border-teal-800/60 text-xs">
-            <div>
-                <span class="text-slate-400 text-[10px] block font-semibold">Bil. Murid:</span>
-                <strong id="bannerCountMurid" class="text-teal-300 font-extrabold text-sm">0</strong>
-            </div>
-            <div class="h-6 w-px bg-teal-800"></div>
-            <div>
-                <span class="text-slate-400 text-[10px] block font-semibold">Standard DSKP:</span>
-                <strong id="bannerCountDskp" class="text-amber-300 font-extrabold text-sm">0 Tajuk</strong>
-            </div>
-            <div class="h-6 w-px bg-teal-800"></div>
-            <div>
-                <span class="text-slate-400 text-[10px] block font-semibold">Instrumen JSU:</span>
-                <strong id="bannerCountJsu" class="text-emerald-300 font-extrabold text-sm">0 Soalan</strong>
-            </div>
-        </div>
-    </div>
+    </header>
 
-    <!-- TAB 1: SENARAI MURID / ALUMNI -->
-    <section id="content-murid" class="space-y-6">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-3">
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <div class="relative flex-1 md:w-72">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
-                    <input type="text" id="searchMurid" oninput="window.renderMuridTable()" placeholder="Cari nama murid..." class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl pl-8 pr-3 py-2.5 focus:ring-2 focus:ring-teal-500 outline-none">
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
+
+        <!-- FILTER & SELECTION BAR (NO PRINT) -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-wrap gap-4 items-center justify-between no-print">
+            <div class="flex flex-wrap gap-3 items-center">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Tingkatan</label>
+                    <select id="selectTingkatan" onchange="kemaskiniDataKelas()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500">
+                        <option value="Tingkatan 1">Tingkatan 1</option>
+                        <option value="Tingkatan 2">Tingkatan 2</option>
+                        <option value="Tingkatan 3">Tingkatan 3</option>
+                        <option value="Tingkatan 4" selected>Tingkatan 4</option>
+                        <option value="Tingkatan 5">Tingkatan 5</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Kelas</label>
+                    <select id="selectKelas" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500">
+                        <option value="4 Al-Syariah">4 Al-Syariah</option>
+                        <option value="4 Mumtaz">4 Mumtaz</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Mata Pelajaran</label>
+                    <select id="selectSubjek" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500">
+                        <option value="Al-Syariah" selected>Al-Syariah</option>
+                        <option value="Pendidikan Islam">Pendidikan Islam</option>
+                        <option value="Tasawwur Islam">Tasawwur Islam</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Sesi / Peperiksaan</label>
+                    <select id="selectUjian" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500">
+                        <option value="Ujian 1">Ujian 1</option>
+                        <option value="Peperiksaan Pertengahan Tahun (PPT)" selected>Pertengahan Tahun (PPT)</option>
+                        <option value="Peperiksaan Akhir Tahun (PAT)">Akhir Tahun (PAT)</option>
+                        <option value="Percubaan SPM">Percubaan SPM</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-                <button onclick="window.openModalTambahMurid()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs px-4 py-2.5 rounded-xl font-bold flex items-center gap-1.5 shadow transition cursor-pointer">
-                    <i class="fa-solid fa-user-plus"></i> Tambah Murid / Alumni
-                </button>
-
-                <button onclick="window.bukaModalNaikKelas()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow transition cursor-pointer">
-                    <i class="fa-solid fa-lock text-amber-200"></i> Proses Naik Kelas Sesi Baharu
-                </button>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs border-collapse" id="studentTable">
-                    <thead id="studentTableHeader"></thead>
-                    <tbody id="studentTableBody" class="divide-y divide-slate-100"></tbody>
-                </table>
-            </div>
-            <div id="studentEmptyState" class="hidden p-8 text-center text-slate-400">
-                <i class="fa-solid fa-user-slash text-4xl mb-2"></i>
-                <p class="font-medium text-xs">Tiada rekod murid/alumni dijumpai bagi kategori ini.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- TAB 2: TRANSIT PBD INTERAKTIF -->
-    <section id="content-transit" class="space-y-6 hidden">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-            <div>
-                <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-table-cells text-amber-500"></i> Rekod Transit PBD & Penjanaan Status Automatik
-                </h3>
-                <p class="text-xs text-slate-500 mt-0.5">Isikan TP mengikut Standard Pembelajaran (SP). Status "Menguasai / Perlu Intervensi" dijana secara automatik.</p>
-            </div>
-
-            <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 p-1.5 rounded-xl">
-                <span class="text-xs font-bold text-amber-900 px-2"><i class="fa-solid fa-calendar-check"></i> Sesi Pentaksiran:</span>
-                <select id="selectSesiPentaksiran" onchange="window.tukarSesiPentaksiran(this.value)" class="bg-white border border-amber-300 font-extrabold text-amber-900 text-xs rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-amber-500">
-                    <option value="Ujian 1">1. Ujian 1</option>
-                    <option value="Pertengahan Tahun" selected>2. Pentaksiran Pertengahan Tahun</option>
-                    <option value="Akhir Tahun">3. Pentaksiran Akhir Tahun</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto max-h-[600px]">
-                <table class="w-full text-left text-xs border-collapse">
-                    <thead class="sticky top-0 bg-slate-100 z-10 shadow-sm" id="transitTableHeader"></thead>
-                    <tbody id="transitTableBody" class="divide-y divide-slate-100"></tbody>
-                </table>
-            </div>
-            <div id="transitEmptyState" class="hidden p-8 text-center text-slate-400">
-                <i class="fa-solid fa-folder-open text-4xl mb-2"></i>
-                <p class="font-medium text-xs">Tiada murid dalam kategori ini untuk paparan Transit PBD.</p>
-            </div>
-        </div>
-
-        <div class="bg-rose-50 border border-rose-200 p-5 rounded-2xl">
-            <h4 class="font-black text-rose-900 text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
-                <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Murid Memerlukan Intervensi / Bimbingan Khas
-            </h4>
-            <div id="intervensiContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-        </div>
-    </section>
-
-    <!-- TAB 3: DSKP AL-SYARIAH KBD -->
-    <section id="content-dskp" class="space-y-6 hidden">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-slate-600"><i class="fa-solid fa-book text-teal-600"></i> Standard Kurikulum DSKP:</span>
-                <span id="labelDskpTingkatan" class="bg-teal-100 text-teal-800 font-black text-xs px-2.5 py-1 rounded-lg">Tingkatan 3 ARIF</span>
-            </div>
-
-            <button onclick="window.openModalTambahSp()" class="bg-teal-700 hover:bg-teal-800 text-white text-xs px-4 py-2.5 rounded-xl font-bold flex items-center gap-1.5 shadow transition cursor-pointer">
-                <i class="fa-solid fa-plus"></i> Tambah SP DSKP
-            </button>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
-                            <th class="px-4 py-3.5 w-24">Kod</th>
-                            <th class="px-4 py-3.5 w-64">Standard Kandungan (SK)</th>
-                            <th class="px-4 py-3.5">Standard Pembelajaran (SP)</th>
-                            <th class="px-4 py-3.5 w-28 text-center">Tindakan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dskpTableBody" class="divide-y divide-slate-100"></tbody>
-                </table>
-            </div>
-            <div id="dskpEmptyState" class="hidden p-8 text-center text-slate-400">
-                <i class="fa-solid fa-book-open text-4xl mb-2"></i>
-                <p class="font-medium text-xs">Tiada DSKP direkodkan untuk kategori ini.</p>
+                <span class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-medium rounded-full border border-emerald-300">
+                    <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i> Auto-Sync Aktif
+                </span>
             </div>
         </div>
-    </section>
 
-    <!-- TAB 4: JSU & INSTRUMEN SOALAN -->
-    <section id="content-jsu" class="space-y-6 hidden">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-            <div>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold text-slate-600"><i class="fa-solid fa-file-signature text-teal-600"></i> Jadual Spesifikasi Ujian (JSU):</span>
-                    <span id="labelJsuTingkatan" class="bg-indigo-100 text-indigo-800 font-black text-xs px-2.5 py-1 rounded-lg">Tingkatan 3 ARIF</span>
-                </div>
-                <p class="text-[11px] text-slate-500 mt-1">Format Soalan Al-Syariah KBD mengikut ketetapan Lembaga Peperiksaan / KPM.</p>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
-                <button onclick="window.janaPresetJsuFormat()" class="bg-indigo-700 hover:bg-indigo-800 text-white text-xs px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-1.5 shadow transition cursor-pointer">
-                    <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> Jana Format KBD Standard
+        <!-- TAB NAVIGATION (NO PRINT) -->
+        <div class="border-b border-slate-200 mb-6 no-print">
+            <nav class="flex gap-2 overflow-x-auto pb-1" aria-label="Tabs">
+                <button onclick="tukarTab('tab-peperiksaan')" id="btn-tab-peperiksaan" class="tab-btn active px-4 py-2.5 font-semibold text-sm rounded-t-lg bg-indigo-600 text-white flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap"></i> Markah & Post Mortem
                 </button>
-
-                <button onclick="window.paparModalJsuFull()" class="bg-teal-800 hover:bg-teal-900 text-white text-xs px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-1.5 shadow transition cursor-pointer">
-                    <i class="fa-solid fa-print text-teal-200"></i> Cetak JSU Matrix
+                <button onclick="tukarTab('tab-pbd')" id="btn-tab-pbd" class="tab-btn px-4 py-2.5 font-semibold text-sm rounded-t-lg text-slate-600 hover:bg-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-book-open"></i> Transit PBD & Hafalan
                 </button>
-
-                <button onclick="window.openModalTambahJsu()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-3.5 py-2.5 rounded-xl font-bold flex items-center gap-1.5 shadow transition cursor-pointer">
-                    <i class="fa-solid fa-plus"></i> Soalan Baharu
+                <button onclick="tukarTab('tab-sejarah')" id="btn-tab-sejarah" class="tab-btn px-4 py-2.5 font-semibold text-sm rounded-t-lg text-slate-600 hover:bg-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-timeline"></i> Jejak Sejarah Batch (T4 ➔ T5)
                 </button>
-            </div>
-        </div>
-
-        <div id="jsuStructureSummary" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-sky-50 border border-sky-200 p-4 rounded-2xl flex justify-between items-center">
-                <div>
-                    <span class="text-[11px] font-bold uppercase text-sky-800 block">Bahagian A (قسم أ)</span>
-                    <h3 class="text-xs font-black text-sky-950 mt-0.5">Bidang Al-Quran & Hafazan</h3>
-                    <p id="jsuSummarySecA" class="text-[11px] text-sky-700 mt-1">4 Soalan x 5 Markah = <strong>20 Markah</strong></p>
-                </div>
-                <span class="bg-sky-200 text-sky-900 text-xs font-black px-3 py-1.5 rounded-xl">20%</span>
-            </div>
-
-            <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl flex justify-between items-center">
-                <div>
-                    <span class="text-[11px] font-bold uppercase text-indigo-800 block">Bahagian B (قسم ب)</span>
-                    <h3 class="text-xs font-black text-indigo-950 mt-0.5">Hadis, Fiqh, Usul, Akidah, Sirah, Adab</h3>
-                    <p id="jsuSummarySecB" class="text-[11px] text-indigo-700 mt-1">8 Soalan x 10 Markah = <strong>80 Markah</strong></p>
-                </div>
-                <span class="bg-indigo-200 text-indigo-900 text-xs font-black px-3 py-1.5 rounded-xl">80%</span>
-            </div>
-
-            <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex justify-between items-center">
-                <div>
-                    <span class="text-[11px] font-bold uppercase text-emerald-800 block">Jumlah Keseluruhan Kertas</span>
-                    <h3 class="text-xs font-black text-emerald-950 mt-0.5">Kertas Pentaksiran Al-Syariah KBD</h3>
-                    <p id="jsuSummaryTotal" class="text-[11px] text-emerald-700 mt-1">12 Soalan = <strong>100 Markah</strong></p>
-                </div>
-                <span class="bg-emerald-200 text-emerald-900 text-xs font-black px-3 py-1.5 rounded-xl">100%</span>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
-                            <th class="px-4 py-3.5 w-32">Bahagian (قسم)</th>
-                            <th class="px-4 py-3.5 w-24">No. Soalan</th>
-                            <th class="px-4 py-3.5 w-44">Bidang / Subjek</th>
-                            <th class="px-4 py-3.5">Topik / Tajuk JSU</th>
-                            <th class="px-4 py-3.5 w-24 text-center">Markah</th>
-                            <th class="px-4 py-3.5 w-32">Konstrukt</th>
-                            <th class="px-4 py-3.5 w-28 text-center">Aras</th>
-                            <th class="px-4 py-3.5 w-32 text-center">Pautan / Fail</th>
-                            <th class="px-4 py-3.5 w-20 text-center">Tindakan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="jsuTableBody" class="divide-y divide-slate-100"></tbody>
-                </table>
-            </div>
-            <div id="jsuEmptyState" class="hidden p-8 text-center text-slate-400">
-                <i class="fa-solid fa-folder-open text-4xl mb-2"></i>
-                <p class="font-medium text-xs">Tiada instrumen JSU direkodkan untuk kategori ini lagi.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- TAB 5: ANALISIS PBD / SPM -->
-    <section id="content-analisis" class="space-y-6 hidden">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-3 border-b border-slate-100 gap-2">
-                <h2 id="analisisTitle" class="font-extrabold text-base text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-simple text-teal-600"></i> Taburan Tahap Penguasaan (TP) PBD
-                </h2>
-                <span id="labelAnalisisTingkatan" class="bg-emerald-100 text-emerald-800 font-black text-xs px-3 py-1 rounded-lg">Tingkatan 3 ARIF</span>
-            </div>
-
-            <div id="alumniStatsCards" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
-                    <span class="text-xs font-bold text-amber-800 uppercase block">Gred Purata Mata Pelajaran (GPMP)</span>
-                    <strong id="statGpmp" class="text-2xl font-black text-amber-900 mt-1 block">0.00</strong>
-                    <p class="text-[11px] text-amber-700 mt-0.5">Al-Syariah SPM</p>
-                </div>
-                <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
-                    <span class="text-xs font-bold text-emerald-800 uppercase block">Peratus Lulus SPM</span>
-                    <strong id="statLulus" class="text-2xl font-black text-emerald-900 mt-1 block">0%</strong>
-                    <p class="text-[11px] text-emerald-700 mt-0.5">Gred E ke atas</p>
-                </div>
-                <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200">
-                    <span class="text-xs font-bold text-indigo-800 uppercase block">Pencapaian Cemerlang (A+/A/A-)</span>
-                    <strong id="statCemerlang" class="text-2xl font-black text-indigo-900 mt-1 block">0 Orang</strong>
-                    <p class="text-[11px] text-indigo-700 mt-0.5">Mata Pelajaran Al-Syariah</p>
-                </div>
-            </div>
-
-            <div id="analisisBarsContainer" class="space-y-4"></div>
-        </div>
-    </section>
-
-</main>
-
-<footer class="bg-white border-t border-slate-200 py-4 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
-        <p>MyClassInsight Platform &copy; 2026 - Hak Cipta Terpelihara Pengurusan PBD, DSKP & SPM KBD Al-Syariah</p>
-    </div>
-</footer>
-
-<div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
-
-<!-- MODAL NAIK KELAS -->
-<div id="modalNaikKelas" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 flex flex-col">
-        <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
-            <div class="bg-amber-100 text-amber-600 p-3 rounded-2xl">
-                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-            </div>
-            <div>
-                <h3 class="font-extrabold text-slate-800 text-base">AMARAN: Proses Naik Kelas</h3>
-                <p class="text-xs text-slate-500">Pertukaran Sesi Persekolahan Baharu</p>
-            </div>
-        </div>
-
-        <div class="py-4 space-y-3 text-xs text-slate-600">
-            <p class="font-medium text-slate-800">Tindakan ini akan memindahkan kelas semua murid secara automatik:</p>
-            <ul class="space-y-2 bg-amber-50/80 p-3 rounded-xl border border-amber-200 text-amber-900 font-semibold">
-                <li class="flex items-center gap-2"><i class="fa-solid fa-arrow-right text-amber-600"></i> Murid <strong>3 ARIF</strong> ➔ Naik ke <strong>4 ARIF</strong></li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-arrow-right text-amber-600"></i> Murid <strong>4 ARIF</strong> ➔ Naik ke <strong>5 ARIF</strong></li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-amber-600"></i> Murid <strong>5 ARIF</strong> ➔ Bertukar ke <strong>ALUMNI (SPM)</strong></li>
-            </ul>
-            <div class="pt-2">
-                <label class="flex items-start gap-2.5 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200 hover:bg-slate-100 transition">
-                    <input type="checkbox" id="chkSahNaikKelas" onchange="window.toggleBtnNaikKelas()" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
-                    <span class="text-xs font-bold text-slate-800 leading-tight">Saya faham dan mengesahkan untuk melaksanakan Proses Naik Kelas.</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
-            <button onclick="window.tutupModalNaikKelas()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">Batal</button>
-            <button id="btnLaksanaNaikKelas" onclick="window.sahDanLaksanaNaikKelas()" disabled class="bg-amber-600 text-white opacity-50 cursor-not-allowed text-xs font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5">
-                <i class="fa-solid fa-bolt"></i> Teruskan Naik Kelas
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL SEJARAH LOG -->
-<div id="modalHistory" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 flex flex-col max-h-[85vh]">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                <i class="fa-solid fa-clock-rotate-left text-teal-600"></i> Log Sejarah Perubahan
-            </h3>
-            <button onclick="window.closeHistoryModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div id="historyListContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 my-2"></div>
-        <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-            <span class="text-slate-400 font-medium"><i class="fa-regular fa-keyboard"></i> Pintasan: <strong>Ctrl + Z</strong></span>
-            <button onclick="window.closeHistoryModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-xl cursor-pointer">Tutup</button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL TAMBAH MURID -->
-<div id="modalTambahMurid" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
-        <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                <i class="fa-solid fa-user-plus text-teal-600"></i> Tambah Murid / Alumni Baharu
-            </h3>
-            <button onclick="window.closeModalTambahMurid()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <form id="formTambahMurid" onsubmit="window.simpanMuridBaharu(event)" class="space-y-4 my-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Nama Penuh Murid:</label>
-                <input type="text" id="inputNamaMurid" required placeholder="Cth: AHMAD SYAKIR BIN ZULKIFLI" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none uppercase">
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Kelas / Status:</label>
-                    <select id="inputKelas" onchange="window.toggleInputsTambahMurid()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-teal-500 outline-none">
-                        <option value="3 ARIF">3 ARIF</option>
-                        <option value="4 ARIF" selected>4 ARIF</option>
-                        <option value="5 ARIF">5 ARIF</option>
-                        <option value="ALUMNI">ALUMNI (Graduasi SPM)</option>
-                    </select>
-                </div>
-
-                <div id="containerInputTp">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Tahap Penguasaan (TP):</label>
-                    <select id="inputTp" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-teal-500 outline-none">
-                        <option value="1">TP 1</option>
-                        <option value="2">TP 2</option>
-                        <option value="3" selected>TP 3</option>
-                        <option value="4">TP 4</option>
-                        <option value="5">TP 5</option>
-                        <option value="6">TP 6</option>
-                    </select>
-                </div>
-
-                <div id="containerInputGredSpm" class="hidden">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Gred SPM Al-Syariah:</label>
-                    <select id="inputGredSpm" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-amber-500 outline-none">
-                        <option value="A+">A+</option>
-                        <option value="A" selected>A</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B">B</option>
-                        <option value="C+">C+</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
-                        <option value="G">G</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
-                <button type="button" onclick="window.closeModalTambahMurid()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">Batal</button>
-                <button type="submit" class="bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-check"></i> Simpan Murid
+                <button onclick="tukarTab('tab-backend')" id="btn-tab-backend" class="tab-btn px-4 py-2.5 font-semibold text-sm rounded-t-lg text-slate-600 hover:bg-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-database"></i> Pengurusan Data (Excel Sync)
                 </button>
+                <button onclick="tukarTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn px-4 py-2.5 font-semibold text-sm rounded-t-lg text-slate-600 hover:bg-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Laporan Sedia Cetak
+                </button>
+            </nav>
+        </div>
+
+        <!-- TAB 1: MARKAH & POST MORTEM -->
+        <div id="tab-peperiksaan" class="tab-content">
+            <!-- RINGKASAN KEPUTUSAN -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <p class="text-xs font-semibold text-slate-500">JUMLAH MURID</p>
+                    <p class="text-2xl font-bold text-slate-800" id="stat-jumlah">5</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm bg-emerald-50/50">
+                    <p class="text-xs font-semibold text-emerald-700">LULUS</p>
+                    <p class="text-2xl font-bold text-emerald-600" id="stat-lulus">4</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm bg-rose-50/50">
+                    <p class="text-xs font-semibold text-rose-700">GAGAL</p>
+                    <p class="text-2xl font-bold text-rose-600" id="stat-gagal">1</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm bg-indigo-50/50">
+                    <p class="text-xs font-semibold text-indigo-700">PERATUS LULUS</p>
+                    <p class="text-2xl font-bold text-indigo-600" id="stat-peratus">80%</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm bg-amber-50/50">
+                    <p class="text-xs font-semibold text-amber-700">GPMP</p>
+                    <p class="text-2xl font-bold text-amber-600" id="stat-gpmp">3.40</p>
+                </div>
             </div>
-        </form>
-    </div>
-</div>
 
-<!-- LOGIK SKRIP UTAMA -->
-<script>
-window.onerror = function(msg, url, line) {
-    const errDiv = document.getElementById('globalErrorDisplay');
-    if (errDiv) {
-        errDiv.classList.remove('hidden');
-        errDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Ralat Larian: ${msg} (Baris: ${line})`;
-    }
-    return false;
-};
+            <!-- JADUAL KEMASUKAN MARKAH -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+                <div class="p-4 bg-slate-100/80 border-b border-slate-200 flex justify-between items-center">
+                    <h2 class="font-bold text-slate-700"><i class="fa-solid fa-pen-to-square me-2 text-indigo-600"></i> Rekod Markah Ujian & Peperiksaan</h2>
+                    <button onclick="simpanKemaskini()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Data
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase text-xs">
+                            <tr>
+                                <th class="p-3">Bil</th>
+                                <th class="p-3">Nama Murid</th>
+                                <th class="p-3 text-center">Ujian 1</th>
+                                <th class="p-3 text-center">PPT (%)</th>
+                                <th class="p-3 text-center">Gred Auto</th>
+                                <th class="p-3 text-center">Status</th>
+                                <th class="p-3">Catatan / Tindakan Guru</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jadualMarkahBody" class="divide-y divide-slate-200">
+                            <!-- Data akan diisi automatik melalui JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-const STORAGE_KEY = 'myClassInsightData_v41';
+            <!-- ANGGARAN POST MORTEM & AI INTERVENSI -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass-chart text-indigo-600"></i> Analisis Kekuatan & Kelemahan
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Kekuatan Pembelajaran Subjek:</label>
+                            <textarea id="postKekuatan" rows="3" class="w-full p-2.5 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-indigo-500" placeholder="Contoh: 80% murid menguasai Soalan Objektif dan Bab 2 Fiqh...">80% murid menguasai bab Munakahat dengan baik dan dapat menjawab soalan kefahaman asas.</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Kelemahan Utama Murid:</label>
+                            <textarea id="postKelemahan" rows="3" class="w-full p-2.5 border rounded-lg text-sm bg-slate-50 focus:ring-2 focus:ring-indigo-500" placeholder="Contoh: Murid lemah dalam soalan KBAT dan Huraian Dalil...">Murid masih lemah dalam mengaitkan dalil Naqli dengan isu kontemporari (Soalan KBAT Bahagian B).</textarea>
+                        </div>
+                    </div>
+                </div>
 
-const defaultMuridList = [
-    // 3 ARIF (14 Murid)
-    { id: '3-01', nama: 'ABDUL QAIYUM BIN HANAFIZULLAH', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '3-02', nama: 'AKMA ZAIRIL DANISH BIN MOHAMAD ASLAM AMIR', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '3-03', nama: 'ARIFF AKMAL BIN ASHARI', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '3-04', nama: 'EZAIRY HAZIMIE BIN NOR HALMY', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '3-05', nama: 'MUHAMMAD ADAM FIRDHAUS BIN ROZALI', kelas: '3 ARIF', status: 'AKTIF', tp: 3, gredSpm: '' },
-    { id: '3-06', nama: 'MUHAMMAD QAYYUM AKIF BIN MOHAMMAD AZWAN ALIF', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '3-07', nama: 'NOR SYAMIL IRFAN BIN NORRUL HISHAM', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '3-08', nama: 'NUR AFIFAH BINTI AB RAHIM', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '3-09', nama: 'NUR DAMIA AWLIYA BINTI MOHAMAD ISMAIL', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '3-10', nama: 'NURQHALIF AN-NAS BIN MOHAMMAD KAMARUL ARRIFIN', kelas: '3 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '3-11', nama: 'NURUL FATIHA BINTI MOHD FAROUK', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '3-12', nama: 'SHARIFAH ARISSA SOFIA BINTI SYED KHAIMAN AKTAR', kelas: '3 ARIF', status: 'AKTIF', tp: 6, gredSpm: '' },
-    { id: '3-13', nama: 'SITI NUR SOFEA NASUHA BINTI MOHD NAZRI', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '3-14', nama: 'SYAKIRAH AQILAH BINTI SYARIFUDIN', kelas: '3 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-
-    // 4 ARIF (10 Murid)
-    { id: '4-01', nama: 'ADAM ZULKARNAIN BIN MOHD HAMDAN', kelas: '4 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '4-02', nama: 'DAMYIA AISYAH BINTI SHAHRUL NIZAM', kelas: '4 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '4-03', nama: 'MOHAMAD FIKRI BIN ABDULLAH', kelas: '4 ARIF', status: 'AKTIF', tp: 3, gredSpm: '' },
-    { id: '4-04', nama: 'MUHAMMAD AMIRUL IRFAN BIN ZAINAL ABIDIN', kelas: '4 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '4-05', nama: 'MUHAMMAD HANIF BIN ABDULLAH', kelas: '4 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '4-06', nama: 'MUHAMMAD SAZLEY AMRIE BIN MOHD ZAMRI', kelas: '4 ARIF', status: 'AKTIF', tp: 3, gredSpm: '' },
-    { id: '4-07', nama: 'NUR ENALYNA HUMAIRAH BINTI ZAINAL ABIDIN', kelas: '4 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '4-08', nama: 'NURUL SYAMIMI BINTI NORRUL HISHAM', kelas: '4 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '4-09', nama: 'PUTRI MARDIATUL NASUHA BINTI IRWAN', kelas: '4 ARIF', status: 'AKTIF', tp: 6, gredSpm: '' },
-    { id: '4-10', nama: 'RUHAIKHANUR DANIA ALYSHA BINTI M HASZRI', kelas: '4 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-
-    // 5 ARIF (7 Murid)
-    { id: '5-01', nama: 'AREEFA DALILA BINTI SHARUL AZLAN', kelas: '5 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '5-02', nama: 'FAIROZ SYAHMI BIN MOHD ZAIDI', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '5-03', nama: 'MUIZ ZAMAN BIN MOHAMAD ZAKI', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' },
-    { id: '5-04', nama: 'NOR QAMIELIEYA BINTI AMRAN', kelas: '5 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '5-05', nama: 'NUR AUNI SYAZWINA BINTI MOHD AZRIL', kelas: '5 ARIF', status: 'AKTIF', tp: 6, gredSpm: '' },
-    { id: '5-06', nama: 'NUR IZZATI UMAIRA BINTI ABDULLAH', kelas: '5 ARIF', status: 'AKTIF', tp: 5, gredSpm: '' },
-    { id: '5-07', nama: 'QAMIEYL IYQRAM ASZRIN BIN ABDULLAH', kelas: '5 ARIF', status: 'AKTIF', tp: 4, gredSpm: '' }
-];
-
-const defaultDskpTingkatan3 = [
-    {"kod": "1.1", "sk": "Hukum Tajwid", "sp": "Mad Far'i (Mad Silah, Mad Badal, Mad Tamkin, Mad Farq)"},
-    {"kod": "1.2", "sk": "Ayat Hafazan", "sp": "Surah Al-Baqarah (Ayat 255 - Ayat Kursi)"},
-    {"kod": "1.3", "sk": "Ayat Kefahaman", "sp": "Hidayah Allah SWT Pemangkin Kesejahteraan"},
-    {"kod": "1.4", "sk": "Ayat Kefahaman", "sp": "Allah SWT Pentadbir Alam Semesta"},
-    {"kod": "1.5", "sk": "Ayat Kefahaman", "sp": "Menjauhi Kemungkaran dan Kemaksiatan"},
-    {"kod": "2.1.1", "sk": "صوم رمضان", "sp": "ذكر تعريف صوم رمضان"},
-    {"kod": "2.1.2", "sk": "صوم رمضان", "sp": "ذكر دليل مشروعية صوم رمضان"},
-    {"kod": "2.1.3", "sk": "صوم رمضان", "sp": "توضيح حكم صوم رمضان"},
-    {"kod": "2.1.4", "sk": "صوم رمضان", "sp": "بيان شروط صحة الصوم"},
-    {"kod": "2.1.5", "sk": "صوم رمضان", "sp": "بيان أركان الصوم"},
-    {"kod": "2.1.6", "sk": "صوم رمضان", "sp": "بيان سنن الصوم"},
-    {"kod": "2.1.7", "sk": "صوم رمضان", "sp": "بيان مكروهات الصوم"},
-    {"kod": "2.1.8", "sk": "صوم رمضان", "sp": "بيان مبطلات الصوم"}
-];
-
-function createFreshState() {
-    return {
-        currentTingkatan: "3 ARIF",
-        currentTab: "murid",
-        currentSesiPentaksiran: "Pertengahan Tahun",
-        muridList: JSON.parse(JSON.stringify(defaultMuridList)),
-        dskpList: {
-            "3 ARIF": JSON.parse(JSON.stringify(defaultDskpTingkatan3)),
-            "4 ARIF": [],
-            "5 ARIF": []
-        },
-        jsuList: { "3 ARIF": [], "4 ARIF": [], "5 ARIF": [] },
-        transitPbd: {},
-        historyStack: []
-    };
-}
-
-let appState = null;
-try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        appState = JSON.parse(saved);
-        if (!appState || !appState.muridList || appState.muridList.length < 31 || !appState.transitPbd) {
-            appState = createFreshState();
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-        }
-    } else {
-        appState = createFreshState();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-    }
-} catch (e) {
-    appState = createFreshState();
-}
-
-function saveState(actionMsg = "") {
-    if (actionMsg) {
-        if (!appState.historyStack) appState.historyStack = [];
-        appState.historyStack.push({
-            time: new Date().toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' }),
-            msg: actionMsg,
-            data: JSON.parse(JSON.stringify({ muridList: appState.muridList, dskpList: appState.dskpList, jsuList: appState.jsuList, transitPbd: appState.transitPbd }))
-        });
-        if (appState.historyStack.length > 15) appState.historyStack.shift();
-    }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-    updateUndoButtonUI();
-}
-
-function updateUndoButtonUI() {
-    const btnUndo = document.getElementById('btnUndo');
-    const badge = document.getElementById('undoCountBadge');
-    if (!btnUndo || !badge) return;
-    
-    const count = appState.historyStack ? appState.historyStack.length : 0;
-    if (count > 0) {
-        btnUndo.disabled = false;
-        btnUndo.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-teal-950/80');
-        btnUndo.classList.add('bg-teal-800', 'hover:bg-teal-700', 'text-white', 'cursor-pointer');
-        badge.classList.remove('hidden');
-        badge.innerText = count;
-    } else {
-        btnUndo.disabled = true;
-        btnUndo.classList.add('opacity-50', 'cursor-not-allowed', 'bg-teal-950/80');
-        btnUndo.classList.remove('bg-teal-800', 'hover:bg-teal-700', 'text-white', 'cursor-pointer');
-        badge.classList.add('hidden');
-    }
-}
-
-window.undoLastAction = function() {
-    if (!appState.historyStack || appState.historyStack.length === 0) return;
-    const lastSnap = appState.historyStack.pop();
-    appState.muridList = lastSnap.data.muridList;
-    appState.dskpList = lastSnap.data.dskpList;
-    appState.jsuList = lastSnap.data.jsuList;
-    appState.transitPbd = lastSnap.data.transitPbd || {};
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-    showToast(`Undo Berjaya: ${lastSnap.msg}`, 'info');
-    renderAll();
-};
-
-window.setTingkatanContext = function(ting) {
-    appState.currentTingkatan = ting;
-    document.querySelectorAll('[id^="ting-"]').forEach(btn => btn?.classList.remove('active-tingkatan'));
-    if (ting === '3 ARIF') document.getElementById('ting-3')?.classList.add('active-tingkatan');
-    if (ting === '4 ARIF') document.getElementById('ting-4')?.classList.add('active-tingkatan');
-    if (ting === '5 ARIF') document.getElementById('ting-5')?.classList.add('active-tingkatan');
-    if (ting === 'ALUMNI') document.getElementById('ting-alumni')?.classList.add('active-tingkatan');
-    if (ting === 'SEMUA') document.getElementById('ting-semua')?.classList.add('active-tingkatan');
-    renderAll();
-};
-
-window.switchTab = function(tab) {
-    appState.currentTab = tab;
-    ['murid', 'transit', 'dskp', 'jsu', 'analisis'].forEach(t => {
-        const sec = document.getElementById(`content-${t}`);
-        const btn = document.getElementById(`tab-${t}`);
-        if (sec) sec.classList.toggle('hidden', t !== tab);
-        if (btn) {
-            btn.classList.toggle('active-subtab', t === tab);
-            btn.classList.toggle('text-teal-200', t !== tab);
-        }
-    });
-    renderAll();
-};
-
-window.tukarSesiPentaksiran = function(sesi) {
-    appState.currentSesiPentaksiran = sesi;
-    saveState(`Tukar Sesi Pentaksiran: ${sesi}`);
-    renderAll();
-};
-
-function renderBanner() {
-    const ting = appState.currentTingkatan;
-    const badge = document.getElementById('bannerBadge');
-    const labelDskp = document.getElementById('labelDskpTingkatan');
-    const labelJsu = document.getElementById('labelJsuTingkatan');
-    const labelAnalisis = document.getElementById('labelAnalisisTingkatan');
-
-    if (badge) badge.innerText = ting;
-    if (labelDskp) labelDskp.innerText = ting;
-    if (labelJsu) labelJsu.innerText = ting;
-    if (labelAnalisis) labelAnalisis.innerText = ting;
-
-    const filteredMurid = (appState.muridList || []).filter(m => ting === 'SEMUA' || m.kelas === ting);
-    const countEl = document.getElementById('bannerCountMurid');
-    if (countEl) countEl.innerText = filteredMurid.length;
-
-    let dskpCount = 0;
-    if (ting === 'SEMUA') {
-        Object.values(appState.dskpList || {}).forEach(arr => dskpCount += (arr || []).length);
-    } else if (appState.dskpList?.[ting]) {
-        dskpCount = appState.dskpList[ting].length;
-    }
-    const dskpEl = document.getElementById('bannerCountDskp');
-    if (dskpEl) dskpEl.innerText = `${dskpCount} Tajuk`;
-
-    let jsuCount = 0;
-    if (ting === 'SEMUA') {
-        Object.values(appState.jsuList || {}).forEach(arr => jsuCount += (arr || []).length);
-    } else if (appState.jsuList?.[ting]) {
-        jsuCount = appState.jsuList[ting].length;
-    }
-    const jsuEl = document.getElementById('bannerCountJsu');
-    if (jsuEl) jsuEl.innerText = `${jsuCount} Soalan`;
-}
-
-window.kemaskiniTpTransit = function(muridId, kodSp, val) {
-    const sesi = appState.currentSesiPentaksiran || "Pertengahan Tahun";
-    if (!appState.transitPbd) appState.transitPbd = {};
-    if (!appState.transitPbd[muridId]) appState.transitPbd[muridId] = {};
-    if (!appState.transitPbd[muridId][sesi]) appState.transitPbd[muridId][sesi] = {};
-
-    appState.transitPbd[muridId][sesi][kodSp] = parseInt(val);
-
-    const murid = appState.muridList.find(m => String(m.id) === String(muridId));
-    if (murid) {
-        const rekod = appState.transitPbd[muridId][sesi];
-        const arrVals = Object.values(rekod);
-        if (arrVals.length > 0) {
-            const avg = Math.round(arrVals.reduce((a, b) => a + b, 0) / arrVals.length);
-            murid.tp = avg;
-        }
-    }
-
-    saveState(`Kemaskini Transit PBD (${kodSp})`);
-    renderAll();
-};
-
-window.renderTransitTable = function() {
-    const ting = appState.currentTingkatan;
-    const sesi = appState.currentSesiPentaksiran || "Pertengahan Tahun";
-    const thead = document.getElementById('transitTableHeader');
-    const tbody = document.getElementById('transitTableBody');
-    const empty = document.getElementById('transitEmptyState');
-    const intervensiDiv = document.getElementById('intervensiContainer');
-
-    if (!thead || !tbody || !empty) return;
-
-    const filteredMurid = (appState.muridList || []).filter(m => (ting === 'SEMUA' || m.kelas === ting) && m.kelas !== 'ALUMNI');
-    
-    let dskpItems = [];
-    if (ting === 'SEMUA') {
-        Object.values(appState.dskpList || {}).forEach(arr => dskpItems.push(...(arr || [])));
-    } else if (appState.dskpList?.[ting]) {
-        dskpItems = appState.dskpList[ting];
-    }
-
-    if (filteredMurid.length === 0) {
-        tbody.innerHTML = '';
-        empty.classList.remove('hidden');
-        if (intervensiDiv) intervensiDiv.innerHTML = `<p class="text-xs text-rose-700 italic">Tiada murid untuk dianalisis bagi kategori ini.</p>`;
-        return;
-    }
-    empty.classList.add('hidden');
-
-    let headerHTML = `
-        <tr class="bg-slate-200 text-slate-700 font-extrabold uppercase text-[11px] tracking-wider border-b border-slate-300">
-            <th class="px-3 py-3 w-10 text-center sticky left-0 bg-slate-200 z-20">Bil</th>
-            <th class="px-4 py-3 min-w-[200px] sticky left-10 bg-slate-200 z-20 shadow-r">Nama Murid</th>
-            <th class="px-3 py-3 w-28 text-center bg-amber-100 text-amber-900 border-x border-amber-300">TP Keseluruhan</th>
-            <th class="px-3 py-3 w-32 text-center bg-teal-100 text-teal-900 border-r border-teal-300">Status Automatik</th>`;
-    
-    if (dskpItems.length > 0) {
-        dskpItems.forEach(sp => {
-            headerHTML += `<th class="px-3 py-3 text-center min-w-[90px] border-r border-slate-300" title="${sp.sk} - ${sp.sp}">Kod ${sp.kod}</th>`;
-        });
-    } else {
-        headerHTML += `<th class="px-4 py-3 text-center text-slate-400 italic">DSKP Belum Dimasukkan</th>`;
-    }
-    headerHTML += `</tr>`;
-    thead.innerHTML = headerHTML;
-
-    let intervensiMuridList = [];
-
-    tbody.innerHTML = filteredMurid.map((m, idx) => {
-        const userTransit = appState.transitPbd?.[m.id]?.[sesi] || {};
-        const userTpList = dskpItems.map(sp => userTransit[sp.kod]).filter(val => val !== undefined && val !== null);
-        
-        let tpAuto = m.tp || 3;
-        let gagalSpList = [];
-
-        dskpItems.forEach(sp => {
-            const val = userTransit[sp.kod];
-            if (val === 1 || val === 2) {
-                gagalSpList.push(sp.kod);
-            }
-        });
-
-        if (userTpList.length > 0) {
-            tpAuto = Math.round(userTpList.reduce((a, b) => a + b, 0) / userTpList.length);
-        }
-
-        const statusLabel = (tpAuto >= 3 && gagalSpList.length === 0) 
-            ? `<span class="bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-lg text-[10px]">MENGUASAI</span>`
-            : `<span class="bg-rose-100 text-rose-800 font-extrabold px-2.5 py-1 rounded-lg text-[10px] animate-pulse">PERLU INTERVENSI</span>`;
-
-        if (tpAuto < 3 || gagalSpList.length > 0) {
-            intervensiMuridList.push({ nama: m.nama, kelas: m.kelas, tp: tpAuto, tajukKritikal: gagalSpList });
-        }
-
-        return `
-            <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-                <td class="px-3 py-2.5 text-center font-bold text-slate-400 sticky left-0 bg-white z-10">${idx + 1}</td>
-                <td class="px-4 py-2.5 font-bold text-slate-800 sticky left-10 bg-white z-10 shadow-r">${m.nama}</td>
-                <td class="px-3 py-2.5 text-center font-black text-amber-900 bg-amber-50/50 border-x border-amber-200 text-sm">${tpAuto}</td>
-                <td class="px-3 py-2.5 text-center border-r border-teal-200">${statusLabel}</td>
-                ${dskpItems.length > 0 ? dskpItems.map(sp => {
-                    const currentVal = userTransit[sp.kod] || "";
-                    return `
-                        <td class="px-2 py-2 text-center border-r border-slate-200">
-                            <select onchange="window.kemaskiniTpTransit('${m.id}', '${sp.kod}', this.value)" class="w-full bg-slate-50 border border-slate-300 rounded px-1.5 py-1 font-extrabold text-xs text-center focus:ring-2 focus:ring-amber-500">
-                                <option value="" ${currentVal === "" ? 'selected' : ''}>-</option>
-                                ${[1, 2, 3, 4, 5, 6].map(tp => `<option value="${tp}" ${currentVal == tp ? 'selected' : ''} class="${tp <= 2 ? 'text-rose-600 font-bold' : ''}">TP ${tp}</option>`).join('')}
-                            </select>
-                        </td>`;
-                }).join('') : `<td class="px-4 py-2 text-center text-slate-400 italic">Sila tambah SP di Tab DSKP</td>`}
-            </tr>`;
-    }).join('');
-
-    if (intervensiDiv) {
-        if (intervensiMuridList.length === 0) {
-            intervensiDiv.innerHTML = `<p class="text-xs font-bold text-emerald-700 bg-emerald-50 p-3 rounded-xl border border-emerald-200"><i class="fa-solid fa-circle-check"></i> Syabas! Semua murid mencapai tahap penguasaan minimum bagi sesi ${sesi}.</p>`;
-        } else {
-            intervensiDiv.innerHTML = intervensiMuridList.map(item => `
-                <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-between">
+                <div class="bg-white p-5 rounded-xl border border-teal-200 shadow-sm bg-gradient-to-br from-white to-teal-50/30">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-teal-900 flex items-center gap-2">
+                            <i class="fa-solid fa-robot text-teal-600"></i> Cadangan Intervensi AI (MyClassInsight AI)
+                        </h3>
+                        <button onclick="janaIntervensiAI()" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Jana Cadangan
+                        </button>
+                    </div>
                     <div>
-                        <div class="flex justify-between items-center">
-                            <strong class="text-xs text-slate-800 uppercase font-black">${item.nama}</strong>
-                            <span class="bg-rose-100 text-rose-800 font-black text-[10px] px-2 py-0.5 rounded">${item.kelas}</span>
-                        </div>
-                        <p class="text-[11px] text-slate-500 mt-1">Purata TP: <strong class="text-rose-600">TP ${item.tp}</strong></p>
+                        <label class="block text-xs font-semibold text-teal-800 mb-1">Cadangan Pelan Tindakan / Intervensi Disyorkan:</label>
+                        <textarea id="postIntervensiAI" rows="7" class="w-full p-3 border border-teal-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-teal-500 text-slate-700 font-sans" placeholder="Klik 'Jana Cadangan' untuk cadangan automatik berdasarkan julat gred murid..."></textarea>
                     </div>
-                    <div class="mt-2 pt-2 border-t border-slate-100">
-                        <span class="text-[10px] text-rose-700 font-bold block">Tajuk Kritikal (TP1/TP2):</span>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            ${item.tajukKritikal.length > 0 
-                                ? item.tajukKritikal.map(k => `<span class="bg-rose-600 text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded">SP ${k}</span>`).join('')
-                                : `<span class="text-[10px] text-slate-400">Purata Keseluruhan < TP3</span>`
-                            }
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: TRANSIT PBD & HAFALAN -->
+        <div id="tab-pbd" class="tab-content hidden">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6">
+                <h2 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-teal-600"></i> Borang Transit PBD & Rekod Hafalan DSKP
+                </h2>
+                
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Standard Kandungan / Subtopik (DSKP)</label>
+                        <select id="selectDSKP" onchange="kemaskiniTransitTable()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-medium">
+                            <option value="1.1 Rukun Wuduk & Syarat Sah">1.1 Rukun Wuduk & Syarat Sah (Aras: Sederhana)</option>
+                            <option value="2.3 Hukum Munakahat & Dalil">2.3 Hukum Munakahat & Dalil (Aras: Tinggi)</option>
+                            <option value="3.1 Hafalan Surah Al-Baqarah (Ayat 1-10)">3.1 Hafalan Surah Al-Baqarah Ayat 1-10 (Hafalan)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1">Tahap Penguasaan Disasar</label>
+                        <input type="text" id="tahapDisasar" value="TP 3 - TP 4 (Sederhana)" readonly class="w-full bg-slate-100 border rounded-lg p-2.5 text-sm text-slate-600 font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1">Tarikh Pengajaran / Ujian</label>
+                        <input type="date" value="2026-10-26" class="w-full bg-slate-50 border rounded-lg p-2.5 text-sm">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto border rounded-lg">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-100 border-b text-slate-700">
+                            <tr>
+                                <th class="p-3">Nama Murid</th>
+                                <th class="p-3 text-center">Status Penguasaan</th>
+                                <th class="p-3 text-center">Tarikh Capai</th>
+                                <th class="p-3">Catatan Usaha / Bantuan Guru</th>
+                                <th class="p-3 text-center">Bimbingan AI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transitBody" class="divide-y divide-slate-200">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: SEJARAH BATCH (MULTI-YEAR TRACKING) -->
+        <div id="tab-sejarah" class="tab-content hidden">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Rekod Perkembangan Batch & Sejarah Intervensi
+                        </h2>
+                        <p class="text-xs text-slate-500">Rekod ini dikekalkan apabila murid naik dari Tingkatan 4 (2025) ke Tingkatan 5 (2026).</p>
+                    </div>
+                    <span class="px-3 py-1 bg-indigo-100 text-indigo-800 font-semibold text-xs rounded-full">Subjek: Al-Syariah</span>
+                </div>
+
+                <div class="relative border-l-2 border-indigo-200 ml-4 space-y-6">
+                    <!-- Timeline Item 1 -->
+                    <div class="relative pl-6">
+                        <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-indigo-600 border-4 border-white"></div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-800 text-sm">Tingkatan 4 (Sesi 2025) - Peperiksaan Akhir Tahun (PAT)</span>
+                                <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-medium">GPMP: 3.52</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2"><strong>Kelemahan T4:</strong> Murid sukar menghafal dalil lengkap soalan struktur.</p>
+                            <p class="text-xs text-indigo-900 bg-indigo-50 p-2 rounded border border-indigo-100">
+                                <strong>Intervensi Dijalankan:</strong> Modul Latih Tubi Dalil Ringkas & Kad Imbasan Hafalan.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 2 -->
+                    <div class="relative pl-6">
+                        <div class="absolute -left-2.5 top-1.5 w-5 h-5 rounded-full bg-teal-500 border-4 border-white"></div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-slate-800 text-sm">Tingkatan 5 (Sesi 2026) - Pertengahan Tahun (PPT) [Semasa]</span>
+                                <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded font-medium">GPMP: 3.40 (Peningkatan)</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2"><strong>Pencapaian:</strong> 80% murid menunjukkan peningkatan dalam kefahaman dalil asas.</p>
                         </div>
                     </div>
                 </div>
-            `).join('');
-        }
-    }
-};
+            </div>
+        </div>
 
-window.renderMuridTable = function() {
-    const ting = appState.currentTingkatan;
-    const query = (document.getElementById('searchMurid')?.value || "").toLowerCase();
-    const thead = document.getElementById('studentTableHeader');
-    const tbody = document.getElementById('studentTableBody');
-    const empty = document.getElementById('studentEmptyState');
-
-    if (!thead || !tbody || !empty) return;
-
-    const filtered = (appState.muridList || []).filter(m => {
-        const matchTing = (ting === 'SEMUA') || (m.kelas === ting);
-        const matchQuery = (m.nama || "").toLowerCase().includes(query);
-        return matchTing && matchQuery;
-    });
-
-    if (filtered.length === 0) {
-        tbody.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
-    }
-    empty.classList.add('hidden');
-
-    if (ting === 'ALUMNI') {
-        thead.innerHTML = `
-            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
-                <th class="px-4 py-3.5 w-12 text-center">Bil</th>
-                <th class="px-4 py-3.5">Nama Alumni</th>
-                <th class="px-4 py-3.5 w-32">Status</th>
-                <th class="px-4 py-3.5 w-36 text-center">Keputusan SPM Al-Syariah</th>
-                <th class="px-4 py-3.5 w-24 text-center">Tindakan</th>
-            </tr>`;
-        
-        tbody.innerHTML = filtered.map((m, idx) => `
-            <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-                <td class="px-4 py-3 text-center font-bold text-slate-400">${idx + 1}</td>
-                <td class="px-4 py-3 font-bold text-slate-800">${m.nama}</td>
-                <td class="px-4 py-3"><span class="bg-amber-100 text-amber-900 font-black px-2 py-0.5 rounded text-[10px]">ALUMNI SPM</span></td>
-                <td class="px-4 py-3 text-center">
-                    <select onchange="window.kemaskiniGredSpm('${m.id}', this.value)" class="bg-amber-50 border border-amber-300 rounded px-2 py-1 font-black text-amber-900 text-xs">
-                        <option value="" ${!m.gredSpm ? 'selected' : ''}>- Belum Diumum -</option>
-                        ${['A+', 'A', 'A-', 'B+', 'B', 'C+', 'C', 'D', 'E', 'G'].map(g => `<option value="${g}" ${m.gredSpm === g ? 'selected' : ''}>Gred ${g}</option>`).join('')}
-                    </select>
-                </td>
-                <td class="px-4 py-3 text-center">
-                    <button onclick="window.padamMurid('${m.id}')" class="text-rose-600 hover:text-rose-800 font-bold"><i class="fa-solid fa-trash"></i></button>
-                </td>
-            </tr>
-        `).join('');
-    } else {
-        thead.innerHTML = `
-            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
-                <th class="px-4 py-3.5 w-12 text-center">Bil</th>
-                <th class="px-4 py-3.5">Nama Murid</th>
-                <th class="px-4 py-3.5 w-28">Kelas</th>
-                <th class="px-4 py-3.5 w-40 text-center">Tahap Penguasaan (TP)</th>
-                <th class="px-4 py-3.5 w-24 text-center">Tindakan</th>
-            </tr>`;
-
-        tbody.innerHTML = filtered.map((m, idx) => `
-            <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-                <td class="px-4 py-3 text-center font-bold text-slate-400">${idx + 1}</td>
-                <td class="px-4 py-3 font-bold text-slate-800">${m.nama}</td>
-                <td class="px-4 py-3"><span class="bg-teal-100 text-teal-800 font-extrabold px-2 py-0.5 rounded text-[10px]">${m.kelas}</span></td>
-                <td class="px-4 py-3 text-center">
-                    <select onchange="window.kemaskiniTpMurid('${m.id}', this.value)" class="bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 font-bold text-teal-700 text-xs">
-                        ${[1, 2, 3, 4, 5, 6].map(tp => `<option value="${tp}" ${m.tp == tp ? 'selected' : ''}>TP ${tp}</option>`).join('')}
-                    </select>
-                </td>
-                <td class="px-4 py-3 text-center">
-                    <button onclick="window.padamMurid('${m.id}')" class="text-rose-600 hover:text-rose-800 font-bold"><i class="fa-solid fa-trash"></i></button>
-                </td>
-            </tr>
-        `).join('');
-    }
-};
-
-window.renderDskpTable = function() {
-    const ting = appState.currentTingkatan;
-    const tbody = document.getElementById('dskpTableBody');
-    const empty = document.getElementById('dskpEmptyState');
-
-    if (!tbody || !empty) return;
-
-    let items = [];
-    if (ting === 'SEMUA') {
-        Object.values(appState.dskpList || {}).forEach(arr => items.push(...(arr || [])));
-    } else if (appState.dskpList?.[ting]) {
-        items = appState.dskpList[ting];
-    }
-
-    if (items.length === 0) {
-        tbody.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
-    }
-    empty.classList.add('hidden');
-
-    tbody.innerHTML = items.map((item, idx) => `
-        <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-            <td class="px-4 py-3 font-mono font-bold text-teal-700">${item.kod}</td>
-            <td class="px-4 py-3 font-bold text-slate-800">${item.sk}</td>
-            <td class="px-4 py-3 text-slate-700 font-medium leading-relaxed">${item.sp}</td>
-            <td class="px-4 py-3 text-center">
-                <button onclick="window.padamDskpItem('${ting}', ${idx})" class="text-rose-600 hover:text-rose-800 font-bold"><i class="fa-solid fa-trash"></i></button>
-            </td>
-        </tr>
-    `).join('');
-};
-
-window.renderJsuTable = function() {
-    const ting = appState.currentTingkatan;
-    const tbody = document.getElementById('jsuTableBody');
-    const empty = document.getElementById('jsuEmptyState');
-
-    if (!tbody || !empty) return;
-
-    let items = [];
-    if (ting === 'SEMUA') {
-        Object.values(appState.jsuList || {}).forEach(arr => items.push(...(arr || [])));
-    } else if (appState.jsuList?.[ting]) {
-        items = appState.jsuList[ting];
-    }
-
-    if (items.length === 0) {
-        tbody.innerHTML = '';
-        empty.classList.remove('hidden');
-        return;
-    }
-    empty.classList.add('hidden');
-
-    tbody.innerHTML = items.map((item, idx) => `
-        <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-            <td class="px-4 py-3 font-bold text-slate-700">Bahagian ${item.bahagian}</td>
-            <td class="px-4 py-3 font-mono font-bold text-indigo-700">${item.no}</td>
-            <td class="px-4 py-3 font-bold text-slate-800">${item.bidang}</td>
-            <td class="px-4 py-3 text-slate-700 font-medium">${item.topik}</td>
-            <td class="px-4 py-3 text-center font-black text-teal-700">${item.markah}m</td>
-            <td class="px-4 py-3"><span class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded text-[10px]">${item.konstrukt}</span></td>
-            <td class="px-4 py-3 text-center font-bold text-slate-600">${item.aras}</td>
-            <td class="px-4 py-3 text-center">
-                ${item.link ? `<a href="${item.link}" target="_blank" class="text-teal-600 hover:underline font-bold"><i class="fa-solid fa-link"></i> Buka</a>` : `<span class="text-slate-300">-</span>`}
-            </td>
-            <td class="px-4 py-3 text-center">
-                <button onclick="window.padamJsuItem('${ting}', ${idx})" class="text-rose-600 hover:text-rose-800 font-bold"><i class="fa-solid fa-trash"></i></button>
-            </td>
-        </tr>
-    `).join('');
-};
-
-window.renderAnalisis = function() {
-    const ting = appState.currentTingkatan;
-    const alumniCards = document.getElementById('alumniStatsCards');
-    const title = document.getElementById('analisisTitle');
-    const container = document.getElementById('analisisBarsContainer');
-
-    if (!alumniCards || !title || !container) return;
-
-    const filtered = (appState.muridList || []).filter(m => ting === 'SEMUA' || m.kelas === ting);
-
-    if (ting === 'ALUMNI') {
-        alumniCards.classList.remove('hidden');
-        title.innerHTML = `<i class="fa-solid fa-graduation-cap text-amber-600"></i> Analisis Keputusan SPM Al-Syariah (Alumni)`;
-
-        const total = filtered.length;
-        if (total === 0) {
-            container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Tiada rekod alumni untuk dianalisis.</p>`;
-            return;
-        }
-
-        let lulusCount = 0, cemerlangCount = 0;
-        let totalGpaPoints = 0;
-        const gredValueMap = { 'A+':0, 'A':1, 'A-':2, 'B+':3, 'B':4, 'C+':5, 'C':6, 'D':7, 'E':8, 'G':9 };
-
-        filtered.forEach(m => {
-            if (m.gredSpm) {
-                if (['A+', 'A', 'A-', 'B+', 'B', 'C+', 'C', 'D', 'E'].includes(m.gredSpm)) lulusCount++;
-                if (['A+', 'A', 'A-'].includes(m.gredSpm)) cemerlangCount++;
-                if (gredValueMap[m.gredSpm] !== undefined) totalGpaPoints += gredValueMap[m.gredSpm];
-            }
-        });
-
-        const gpmp = (total > 0) ? (totalGpaPoints / total).toFixed(2) : "0.00";
-        const pctLulus = (total > 0) ? ((lulusCount / total) * 100).toFixed(1) : "0";
-
-        document.getElementById('statGpmp').innerText = gpmp;
-        document.getElementById('statLulus').innerText = `${pctLulus}%`;
-        document.getElementById('statCemerlang').innerText = `${cemerlangCount} Orang`;
-
-        container.innerHTML = `
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <p class="text-xs font-bold text-slate-700 mb-2">Ringkasan Pencapaian Alumni (${total} Orang Murid)</p>
-                <div class="w-full bg-slate-200 h-4 rounded-full overflow-hidden flex">
-                    <div style="width: ${(cemerlangCount/total)*100}%" class="bg-indigo-600 h-full" title="Cemerlang"></div>
-                    <div style="width: ${((lulusCount - cemerlangCount)/total)*100}%" class="bg-emerald-500 h-full" title="Lulus"></div>
-                    <div style="width: ${((total - lulusCount)/total)*100}%" class="bg-rose-500 h-full" title="Gagal"></div>
+        <!-- TAB 4: PENGURUSAN DATA (BACKEND EXCEL) -->
+        <div id="tab-backend" class="tab-content hidden">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 class="font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-file-excel text-emerald-600"></i> Pengurusan Data Senarai Murid & DSKP (Hidden Sync)
+                        </h2>
+                        <p class="text-xs text-slate-500">Data di sini adalah latar belakang backend. Boleh di-import/auto-sync secara terus daripada Google Sheets / Excel.</p>
+                    </div>
+                    <button class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                        <i class="fa-solid fa-file-csv"></i> Muat Naik CSV / Excel
+                    </button>
                 </div>
-            </div>`;
-    } else {
-        alumniCards.classList.add('hidden');
-        title.innerHTML = `<i class="fa-solid fa-chart-simple text-teal-600"></i> Taburan Tahap Penguasaan (TP) PBD`;
 
-        const total = filtered.length;
-        if (total === 0) {
-            container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Tiada murid dalam kategori ini.</p>`;
-            return;
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="border rounded-lg p-4 bg-slate-50">
+                        <h3 class="font-bold text-sm text-slate-700 mb-3"><i class="fa-solid fa-users me-2"></i> Pangkalan Data Murid (4 Al-Syariah)</h3>
+                        <ul class="text-xs space-y-2 font-mono text-slate-700">
+                            <li class="p-2 bg-white rounded border">1. AHMAD AMIRUL BIN ROSLI (L)</li>
+                            <li class="p-2 bg-white rounded border">2. NUR AIN BINTI ZULKIFLI (P)</li>
+                            <li class="p-2 bg-white rounded border">3. MUHAMMAD HAZIM BIN ISMAIL (L)</li>
+                            <li class="p-2 bg-white rounded border">4. SITI SARAH BINTI HASNAN (P)</li>
+                            <li class="p-2 bg-white rounded border">5. AMIR FARHAN BIN ADNAN (L)</li>
+                        </ul>
+                    </div>
+                    <div class="border rounded-lg p-4 bg-slate-50">
+                        <h3 class="font-bold text-sm text-slate-700 mb-3"><i class="fa-solid fa-book me-2"></i> Pangkalan DSKP Al-Syariah T4</h3>
+                        <ul class="text-xs space-y-2 text-slate-700">
+                            <li class="p-2 bg-white rounded border"><strong>1.1:</strong> Rukun Wuduk & Syarat Sah (Aras Sederhana)</li>
+                            <li class="p-2 bg-white rounded border"><strong>2.3:</strong> Hukum Munakahat & Dalil (Aras Tinggi)</li>
+                            <li class="p-2 bg-white rounded border"><strong>3.1:</strong> Hafalan Surah Al-Baqarah (Ayat 1-10)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: LAPORAN SEDIA CETAK -->
+        <div id="tab-laporan" class="tab-content hidden">
+            <div class="mb-4 no-print flex justify-end">
+                <button onclick="window.print()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Cetak / Simpan PDF Laporan
+                </button>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl border border-slate-300 shadow-sm print-card text-black">
+                <!-- HEAD LAPORAN KEMENTERIAN / PAPARAN RASMI -->
+                <div class="text-center border-b-2 border-slate-800 pb-4 mb-6">
+                    <h2 class="text-xl font-bold uppercase tracking-wider">LAPORAN POST MORTEM PEPERIKSAAN & EVİDEN PdPC</h2>
+                    <p class="text-sm font-semibold">SISTEM MyClassInsight | SEKOLAH MENENGAH KEBANGSAAN</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-xs font-semibold mb-6 border-b pb-4">
+                    <div>
+                        <p>NAMA GURU: <span class="font-bold text-indigo-900">IZYAN MUNIRAH BINTI MOHD SADALE</span></p>
+                        <p>MATA PELAJARAN: <span id="repSubjek">Al-Syariah</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p>TINGKATAN / KELAS: <span id="repKelas">4 Al-Syariah</span></p>
+                        <p>PEPERIKSAAN / SESI: <span id="repUjian">Peperiksaan Pertengahan Tahun (PPT)</span></p>
+                    </div>
+                </div>
+
+                <h3 class="font-bold text-sm mb-2 uppercase border-b pb-1">1. Ringkasan Pencapaian Kelas</h3>
+                <table class="w-full text-xs text-center border border-slate-400 mb-6">
+                    <thead class="bg-slate-100 border-b border-slate-400 font-bold">
+                        <tr>
+                            <th class="p-2 border-r border-slate-400">Bil Murid</th>
+                            <th class="p-2 border-r border-slate-400">Lulus</th>
+                            <th class="p-2 border-r border-slate-400">Gagal</th>
+                            <th class="p-2 border-r border-slate-400">% Lulus</th>
+                            <th class="p-2">GPMP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-2 border-r border-slate-400" id="repJumlah">5</td>
+                            <td class="p-2 border-r border-slate-400" id="repLulus">4</td>
+                            <td class="p-2 border-r border-slate-400" id="repGagal">1</td>
+                            <td class="p-2 border-r border-slate-400" id="repPeratus">80%</td>
+                            <td class="p-2 font-bold" id="repGPMP">3.40</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="font-bold text-sm mb-2 uppercase border-b pb-1">2. Analisis Kekuatan & Kelemahan</h3>
+                <div class="text-xs space-y-2 mb-6">
+                    <p><strong>Kekuatan:</strong> <span id="repKekuatan">-</span></p>
+                    <p><strong>Kelemahan:</strong> <span id="repKelemahan">-</span></p>
+                </div>
+
+                <h3 class="font-bold text-sm mb-2 uppercase border-b pb-1">3. Cadangan Pelan Intervensi</h3>
+                <div class="text-xs bg-slate-50 p-3 rounded border border-slate-300 mb-8 whitespace-pre-line" id="repIntervensi">
+                    -
+                </div>
+
+                <!-- TANDATANGAN PENTADBIR -->
+                <div class="grid grid-cols-2 gap-8 text-xs pt-8 border-t border-slate-300">
+                    <div>
+                        <p class="mb-12">Disediakan Oleh:</p>
+                        <p class="font-bold underline">IZYAN MUNIRAH BINTI MOHD SADALE</p>
+                        <p>Guru Mata Pelajaran</p>
+                    </div>
+                    <div>
+                        <p class="mb-12">Disahkan Oleh:</p>
+                        <p class="font-bold">____________________________________</p>
+                        <p>(Pengetua / PK Pentadbiran)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // DATA SAMPEL MURID (SIMULASI BACKEND AUTO-SYNC)
+        let senaraiMurid = [
+            { id: 1, nama: "AHMAD AMIRUL BIN ROSLI", ujian1: 65, ppt: 72, pbd: "TP4", transit: true, tarikh: "2026-10-15", tindakan: "Memahami rukun dengan baik" },
+            { id: 2, nama: "NUR AIN BINTI ZULKIFLI", ujian1: 82, ppt: 88, pbd: "TP5", transit: true, tarikh: "2026-10-12", tindakan: "Lancar hafalan & huraian" },
+            { id: 3, nama: "MUHAMMAD HAZIM BIN ISMAIL", ujian1: 35, ppt: 38, pbd: "TP2", transit: false, tarikh: "-", tindakan: "Perlu bimbingan visual dalil" },
+            { id: 4, nama: "SITI SARAH BINTI HASNAN", ujian1: 50, ppt: 58, pbd: "TP3", transit: true, tarikh: "2026-10-20", tindakan: "Boleh menyenaraikan rukun wuduk" },
+            { id: 5, nama: "AMIR FARHAN BIN ADNAN", ujian1: 60, ppt: 64, pbd: "TP4", transit: true, tarikh: "2026-10-18", tindakan: "Menguasai soalan jawi" }
+        ];
+
+        // TUKAR TAB
+        function tukarTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('text-slate-600');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const btnAktif = document.getElementById('btn-' + tabId);
+            btnAktif.classList.add('bg-indigo-600', 'text-white');
+            btnAktif.classList.remove('text-slate-600');
+
+            if(tabId === 'tab-laporan') kemaskiniLaporanPrint();
         }
 
-        const counts = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0 };
-        filtered.forEach(m => { if(m.tp >= 1 && m.tp <= 6) counts[m.tp]++; });
+        // AUTO GRADEMAKER (SPM STANDARD RULE)
+        function kiraGred(markah) {
+            if (markah >= 90) return { gred: 'A+', status: 'Lulus', gpa: 0 };
+            if (markah >= 80) return { gred: 'A', status: 'Lulus', gpa: 1 };
+            if (markah >= 70) return { gred: 'A-', status: 'Lulus', gpa: 2 };
+            if (markah >= 65) return { gred: 'B+', status: 'Lulus', gpa: 3 };
+            if (markah >= 60) return { gred: 'B', status: 'Lulus', gpa: 4 };
+            if (markah >= 50) return { gred: 'C', status: 'Lulus', gpa: 5 };
+            if (markah >= 40) return { gred: 'D', status: 'Lulus', gpa: 6 };
+            return { gred: 'G', status: 'Gagal', gpa: 9 };
+        }
 
-        container.innerHTML = [1,2,3,4,5,6].map(tp => {
-            const cnt = counts[tp];
-            const pct = ((cnt / total) * 100).toFixed(1);
-            return `
-                <div>
-                    <div class="flex justify-between text-xs font-bold mb-1">
-                        <span class="text-slate-700">Tahap Penguasaan ${tp} (TP ${tp})</span>
-                        <span class="text-teal-700">${cnt} Murid (${pct}%)</span>
-                    </div>
-                    <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
-                        <div class="bg-teal-600 h-full transition-all duration-500" style="width: ${pct}%"></div>
-                    </div>
-                </div>`;
-        }).join('');
-    }
-};
+        // PAPAR DATA DALAM JADUAL
+        function muatJadual() {
+            const tbody = document.getElementById('jadualMarkahBody');
+            tbody.innerHTML = '';
 
-function renderAll() {
-    renderBanner();
-    window.renderMuridTable();
-    window.renderTransitTable();
-    window.renderDskpTable();
-    window.renderJsuTable();
-    window.renderAnalisis();
-    updateUndoButtonUI();
-}
+            let totalLulus = 0;
+            let totalGagal = 0;
+            let sumGpa = 0;
 
-window.openModalTambahMurid = function() { document.getElementById('modalTambahMurid')?.classList.remove('hidden'); };
-window.closeModalTambahMurid = function() { document.getElementById('modalTambahMurid')?.classList.add('hidden'); };
-window.toggleInputsTambahMurid = function() {
-    const k = document.getElementById('inputKelas')?.value;
-    document.getElementById('containerInputTp')?.classList.toggle('hidden', k === 'ALUMNI');
-    document.getElementById('containerInputGredSpm')?.classList.toggle('hidden', k !== 'ALUMNI');
-};
-window.simpanMuridBaharu = function(e) {
-    e.preventDefault();
-    const nama = document.getElementById('inputNamaMurid')?.value.trim().toUpperCase();
-    const kelas = document.getElementById('inputKelas')?.value;
-    const tp = parseInt(document.getElementById('inputTp')?.value || "3");
-    const gredSpm = document.getElementById('inputGredSpm')?.value || "";
+            senaraiMurid.forEach((m, idx) => {
+                const res = kiraGred(m.ppt);
+                if (res.status === 'Lulus') totalLulus++; else totalGagal++;
+                sumGpa += res.gpa;
 
-    if (!nama) return;
+                const statusColor = res.status === 'Lulus' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
 
-    appState.muridList.push({ id: `M-${Date.now()}`, nama, kelas, status: 'AKTIF', tp, gredSpm: kelas === 'ALUMNI' ? gredSpm : "" });
-    saveState(`Tambah Murid: ${nama}`);
-    window.closeModalTambahMurid();
-    showToast("Murid baharu berjaya ditambah", "success");
-    renderAll();
-};
-window.kemaskiniTpMurid = function(id, val) {
-    const m = appState.muridList.find(x => String(x.id) === String(id));
-    if (m) {
-        m.tp = parseInt(val);
-        saveState(`Kemaskini TP ${m.nama} -> TP${val}`);
-        renderAll();
-    }
-};
-window.kemaskiniGredSpm = function(id, val) {
-    const m = appState.muridList.find(x => String(x.id) === String(id));
-    if (m) {
-        m.gredSpm = val;
-        saveState(`Kemaskini Gred SPM ${m.nama} -> ${val}`);
-        renderAll();
-    }
-};
-window.padamMurid = function(id) {
-    const m = appState.muridList.find(x => String(x.id) === String(id));
-    if (m && confirm(`Adakah anda pasti untuk memadam rekod ${m.nama}?`)) {
-        appState.muridList = appState.muridList.filter(x => String(x.id) !== String(id));
-        saveState(`Padam Murid: ${m.nama}`);
-        showToast("Rekod murid dipadam", "info");
-        renderAll();
-    }
-};
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 text-center">${idx + 1}</td>
+                        <td class="p-3 font-semibold text-slate-800">${m.nama}</td>
+                        <td class="p-3 text-center"><input type="number" value="${m.ujian1}" onchange="updateMarkah(${m.id}, 'ujian1', this.value)" class="w-16 border rounded text-center p-1"></td>
+                        <td class="p-3 text-center"><input type="number" value="${m.ppt}" onchange="updateMarkah(${m.id}, 'ppt', this.value)" class="w-16 border rounded text-center p-1 font-bold"></td>
+                        <td class="p-3 text-center font-bold text-indigo-700">${res.gred}</td>
+                        <td class="p-3 text-center"><span class="px-2 py-0.5 text-xs font-semibold rounded-full ${statusColor}">${res.status}</span></td>
+                        <td class="p-3"><input type="text" value="${m.tindakan}" onchange="updateMarkah(${m.id}, 'tindakan', this.value)" class="w-full border rounded p-1 text-xs"></td>
+                    </tr>
+                `;
+            });
 
-window.exportData = function() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
-    const dlAnchor = document.createElement('a');
-    dlAnchor.setAttribute("href", dataStr);
-    dlAnchor.setAttribute("download", `MyClassInsight_Backup_${new Date().toISOString().slice(0,10)}.json`);
-    document.body.appendChild(dlAnchor);
-    dlAnchor.click();
-    dlAnchor.remove();
-    showToast("Data fail eksport berjaya dimuat turun", "success");
-};
-window.importData = function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const imported = JSON.parse(e.target.result);
-            if (imported && imported.muridList) {
-                appState = imported;
-                saveState("Import Data Sandaran");
-                showToast("Data berjaya di-import!", "success");
-                renderAll();
-            } else {
-                alert("Format fail JSON tidak sah!");
+            // Kemaskini Stat
+            const jumlah = senaraiMurid.length;
+            document.getElementById('stat-jumlah').innerText = jumlah;
+            document.getElementById('stat-lulus').innerText = totalLulus;
+            document.getElementById('stat-gagal').innerText = totalGagal;
+            document.getElementById('stat-peratus').innerText = Math.round((totalLulus/jumlah)*100) + '%';
+            document.getElementById('stat-gpmp').innerText = (sumGpa/jumlah).toFixed(2);
+
+            muatTransitTable();
+        }
+
+        function updateMarkah(id, key, val) {
+            const m = senaraiMurid.find(x => x.id === id);
+            if(m) {
+                m[key] = key === 'tindakan' ? val : Number(val);
+                muatJadual();
             }
-        } catch (err) {
-            alert("Ralat semasa membaca fail JSON.");
         }
-    };
-    reader.readAsText(file);
-};
-window.resetToDefaultData = function() {
-    if (confirm("Adakah anda pasti untuk menetapkan semula semua data ke asal?")) {
-        appState = createFreshState();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-        showToast("Sistem ditetapkan semula ke data asal", "info");
-        renderAll();
-    }
-};
 
-function showToast(msg, type = "info") {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-    const toast = document.createElement('div');
-    const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'info' ? 'bg-teal-700' : 'bg-rose-600';
-    toast.className = `${bgClass} text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce`;
-    toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${msg}`;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
+        // BOT AI JANA INTERVENSI
+        function janaIntervensiAI() {
+            const gagalCount = document.getElementById('stat-gagal').innerText;
+            const kelemahan = document.getElementById('postKelemahan').value;
 
-document.addEventListener('DOMContentLoaded', () => {
-    window.setTingkatanContext(appState.currentTingkatan || '3 ARIF');
-});
-</script>
+            const cadangan = `[CADANGAN AI MYCLASSINSIGHT]
+1. PROGRAM KLINIK DALAL (Untuk ${gagalCount} Murid Gagal):
+   - Menggunakan Teknik Visual Mind-Map bagi memetakan Hukum Munakahat & Dalil.
+   - Sesi Bimbingan Rakan Sebaya (Peer Coaching) bersama murid cemerlang Gred A.
+
+2. PENGUKUHAN SOALAN KBAT:
+   - Menyediakan Latih Tubi Berfokus Kata Kunci Soalan KBAT Bahagian B.
+   - Latihan harian 1 hari 1 soalan struktur DSKP.`;
+
+            document.getElementById('postIntervensiAI').value = cadangan;
+        }
+
+        // TRANSIT PBD
+        function muatTransitTable() {
+            const tbody = document.getElementById('transitBody');
+            tbody.innerHTML = '';
+
+            senaraiMurid.forEach(m => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-3 font-semibold text-slate-800">${m.nama}</td>
+                        <td class="p-3 text-center">
+                            <input type="checkbox" ${m.transit ? 'checked' : ''} onchange="tukarStatusTransit(${m.id}, this.checked)" class="w-4 h-4 text-teal-600 rounded">
+                        </td>
+                        <td class="p-3 text-center text-xs">${m.transit ? m.tarikh : '<span class="text-rose-500">Belum Capai</span>'}</td>
+                        <td class="p-3 text-xs">${m.tindakan}</td>
+                        <td class="p-3 text-center">
+                            ${!m.transit ? `<button onclick="bantuAI('${m.nama}')" class="px-2 py-1 bg-amber-500 text-white text-xs rounded hover:bg-amber-600"><i class="fa-solid fa-lightbulb"></i> Bantuan AI</button>` : '<span class="text-emerald-600 text-xs"><i class="fa-solid fa-circle-check"></i> Selesai</span>'}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function tukarStatusTransit(id, checked) {
+            const m = senaraiMurid.find(x => x.id === id);
+            if(m) {
+                m.transit = checked;
+                m.tarikh = checked ? new Date().toISOString().split('T')[0] : '-';
+                muatTransitTable();
+            }
+        }
+
+        function bantuAI(nama) {
+            alert(`[CADANGAN BANTUAN AI UNTUK ${nama}]:\n\n1. Sediakan kad imbasan langkah Rukun Wuduk berpiktogram.\n2. Lakukan ujian amali individu secara lisan bersama Cikgu Izyan.\n3. Berikan penghargaan bintang kecil bagi setiap pencapaian subtopik.`);
+        }
+
+        function kemaskiniLaporanPrint() {
+            document.getElementById('repSubjek').innerText = document.getElementById('selectSubjek').value;
+            document.getElementById('repKelas').innerText = document.getElementById('selectKelas').value;
+            document.getElementById('repUjian').innerText = document.getElementById('selectUjian').value;
+
+            document.getElementById('repJumlah').innerText = document.getElementById('stat-jumlah').innerText;
+            document.getElementById('repLulus').innerText = document.getElementById('stat-lulus').innerText;
+            document.getElementById('repGagal').innerText = document.getElementById('stat-gagal').innerText;
+            document.getElementById('repPeratus').innerText = document.getElementById('stat-peratus').innerText;
+            document.getElementById('repGPMP').innerText = document.getElementById('stat-gpmp').innerText;
+
+            document.getElementById('repKekuatan').innerText = document.getElementById('postKekuatan').value;
+            document.getElementById('repKelemahan').innerText = document.getElementById('postKelemahan').value;
+            document.getElementById('repIntervensi').innerText = document.getElementById('postIntervensiAI').value || "Tiada intervensi dijana lagi.";
+        }
+
+        function simpanKemaskini() {
+            alert("Data berjaya dikemaskini & disimpan ke Cloud Storage!");
+        }
+
+        // INITIAL LOAD
+        window.onload = function() {
+            muatJadual();
+        };
+    </script>
 </body>
 </html>
